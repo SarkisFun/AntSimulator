@@ -1,9 +1,9 @@
-h1 {
-    text-align: center;
+body {
+    background: rgb(34, 34, 34);
 }
 
 #canvas {
     background-color: black;
-    margin: 20px auto;
+    margin: auto auto;
     display: block;
 }
