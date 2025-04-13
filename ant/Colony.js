@@ -5,6 +5,8 @@ export class Colony {
     static scale = 70;
     static ctx;
     static canvas;
+    static minZoom = 1;
+    static maxZoom = 5;
 
     constructor(ctx, canvas, antNumber, x, y) {
         Colony.ctx = ctx;
@@ -15,7 +17,12 @@ export class Colony {
         for (let i = 0; i < antNumber; i++) {
             this.workers.push(new AntWorker(ctx, canvas, x, y));
         }
-        Colony.img.src = "./img/colony.png"
+        Colony.img.src = "./img/colony.png";
+        this.zoomScale = 1;
+    }
+
+    setZoom(zoomScale) {
+        this.zoomScale = zoomScale;
     }
 
     draw() {
@@ -30,12 +37,15 @@ export class Colony {
     }
 
     update() {
+        Colony.ctx.save();
         Colony.ctx.clearRect(0, 0, canvas.width, canvas.height);
+        Colony.ctx.scale(this.zoomScale, this.zoomScale);
         this.draw()
         this.workers.forEach(ant =>{
             ant.update();
         });
+        Colony.ctx.restore();
 
-    requestAnimationFrame(this.update.bind(this));
+        requestAnimationFrame(this.update.bind(this));
     }
 }
