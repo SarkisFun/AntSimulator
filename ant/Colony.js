@@ -3,49 +3,41 @@ import { AntWorker } from "./AntWorker.js";
 export class Colony {
     static img = new Image();
     static scale = 70;
-    static ctx;
-    static canvas;
     static minZoom = 1;
     static maxZoom = 5;
 
-    constructor(ctx, canvas, antNumber, x, y) {
-        Colony.ctx = ctx;
-        Colony.canvas = canvas;
+    constructor(antNumber, x, y) {
         this.x = x - Colony.scale /2;
         this.y = y - Colony.scale /2;
         this.workers = [];
         for (let i = 0; i < antNumber; i++) {
-            this.workers.push(new AntWorker(ctx, canvas, x, y));
+            this.workers.push(new AntWorker(x, y));
         }
         Colony.img.src = "./img/colony.png";
         this.zoomScale = 1;
     }
 
-    setZoom(zoomScale) {
-        this.zoomScale = zoomScale;
-    }
-
-    draw() {
+    draw(canvas) {
+        let ctx = canvas.getContext('2d');
         if (Colony.img.complete) {
-            Colony.ctx.drawImage(Colony.img, this.x, this.y, Colony.scale, Colony.scale);
+            ctx.drawImage(Colony.img, this.x, this.y, Colony.scale, Colony.scale);
         } else {
             Colony.img.onload = () => {
-                Colony.ctx.drawImage(Colony.img, this.x, this.y, Colony.scale, Colony.scale);
+                ctx.drawImage(Colony.img, this.x, this.y, Colony.scale, Colony.scale);
             };
         }
         
     }
 
-    update() {
-        Colony.ctx.save();
-        Colony.ctx.clearRect(0, 0, canvas.width, canvas.height);
-        Colony.ctx.scale(this.zoomScale, this.zoomScale);
-        this.draw()
+    update(canvas) {
+        let ctx = canvas.getContext('2d');
+        ctx.save();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.scale(this.zoomScale, this.zoomScale);
+        this.draw(canvas)
         this.workers.forEach(ant =>{
-            ant.update();
+            ant.update(canvas);
         });
-        Colony.ctx.restore();
-
-        requestAnimationFrame(this.update.bind(this));
+        ctx.restore();
     }
 }

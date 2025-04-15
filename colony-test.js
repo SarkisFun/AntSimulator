@@ -7,7 +7,7 @@ const ctx = canvas.getContext('2d');
 var scale = 1;
 var scaleFactor = 1.1;
 
-var c = new Colony(ctx, canvas, 1000, 500, 700);
+var c = new Colony(canvas, 1000, 500, 700);
 
 canvas.addEventListener("wheel", (event) => {
     event.preventDefault();
