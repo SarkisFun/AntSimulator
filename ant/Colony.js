@@ -33,7 +33,7 @@ export class Colony {
         let ctx = canvas.getContext('2d');
         ctx.save();
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.scale(this.zoomScale, this.zoomScale);
+        //ctx.scale(this.zoomScale, this.zoomScale);
         this.draw(canvas)
         this.workers.forEach(ant =>{
             ant.update(canvas);
