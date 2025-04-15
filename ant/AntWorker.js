@@ -15,8 +15,7 @@ export class AntWorker {
         this.angle = Math.random() * Math.PI * 2;
     }
     
-    draw(canvas, rotationAngle) {
-      let ctx = canvas.getContext('2d');
+    draw(ctx, rotationAngle) {
       ctx.save();
       ctx.translate(this.posX, this.posY);
       ctx.rotate(rotationAngle + Math.PI / 2);
@@ -63,6 +62,6 @@ export class AntWorker {
 
       let rotationAngle = Math.atan2(dy, dx) /*+ Math.PI / 2*/;
 
-      this.draw(canvas, rotationAngle);
+      this.draw(ctx, rotationAngle);
     }
   }

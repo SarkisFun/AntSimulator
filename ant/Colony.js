@@ -3,8 +3,6 @@ import { AntWorker } from "./AntWorker.js";
 export class Colony {
     static img = new Image();
     static scale = 70;
-    static minZoom = 1;
-    static maxZoom = 5;
 
     constructor(antNumber, x, y) {
         this.x = x - Colony.scale /2;
@@ -14,7 +12,6 @@ export class Colony {
             this.workers.push(new AntWorker(x, y));
         }
         Colony.img.src = "./img/colony.png";
-        this.zoomScale = 1;
     }
 
     draw(canvas) {
@@ -31,13 +28,13 @@ export class Colony {
 
     update(canvas) {
         let ctx = canvas.getContext('2d');
-        ctx.save();
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        //ctx.save();
+        //ctx.clearRect(0, 0, canvas.width, canvas.height);
         //ctx.scale(this.zoomScale, this.zoomScale);
         this.draw(canvas)
         this.workers.forEach(ant =>{
             ant.update(canvas);
         });
-        ctx.restore();
+        //ctx.restore();
     }
 }
