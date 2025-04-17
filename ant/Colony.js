@@ -7,8 +7,8 @@ export class Colony {
     constructor(antNumber, x, y) {
         // this.x = x - Colony.scale /2;
         // this.y = y - Colony.scale /2;
-        this.x = x;
-        this.y = y;
+        this.x = x - Colony.scale/2;
+        this.y = y - Colony.scale/2;
         this.workers = [];
         for (let i = 0; i < antNumber; i++) {
             this.workers.push(new AntWorker(x, y));

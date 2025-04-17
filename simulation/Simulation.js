@@ -10,8 +10,6 @@ const STOPPED = 0;
 const STARTED = 1;
 const PAUSED = 2;
 
-const TEMP = 10;
-
 export class Simulation {
     static canvas;
     static ctx;
@@ -98,14 +96,6 @@ export class Simulation {
         Simulation.ctx.clearRect(0, 0, Simulation.canvas.width, Simulation.canvas.height); // Clear canvas once per frame
         Simulation.ctx.save();
 
-        /**************************************************************************************************/
-        Simulation.ctx.fillStyle = "white";
-        Simulation.ctx.fillRect(0,0,TEMP,TEMP);
-        Simulation.ctx.fillRect(Simulation.canvas.width - TEMP,Simulation.canvas.height - TEMP,TEMP,TEMP);
-        Simulation.ctx.fillRect(0,Simulation.canvas.height - TEMP,TEMP,TEMP);
-        Simulation.ctx.fillRect(Simulation.canvas.width - TEMP,0,TEMP,TEMP);
-        Simulation.ctx.fillRect(Simulation.canvas.width/2, Simulation.canvas.height/2, 2,2);
-        /**************************************************************************************************/
         Simulation.ctx.translate(this.offsetX, this.offsetY);
         Simulation.ctx.scale(Simulation.scale, Simulation.scale);
 
