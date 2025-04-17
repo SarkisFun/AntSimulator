@@ -16,6 +16,7 @@ window.addEventListener("load", () => {
 })
 
 document.getElementById("btnPlay").addEventListener("click", function(event) {
+    document.getElementById("btnStop").disabled = false;    
     if (event.target.value === "\u25BA Play simulation") {
         event.target.value = "\u275A\u275A Pause simulation";
         simulation.start();    
@@ -26,7 +27,8 @@ document.getElementById("btnPlay").addEventListener("click", function(event) {
     
 });
 
-document.getElementById("btnStop").addEventListener("click", () => {
+document.getElementById("btnStop").addEventListener("click", function(event) {
     simulation.stop();
+    event.target.disabled = true;
     document.getElementById("btnPlay").value = "\u25BA Play simulation";
 })
