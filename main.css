@@ -54,6 +54,10 @@ main {
     height: 50px;
 }
 
+.submenu input[type="number"] {
+    width: 120px;
+}
+
 #canvas {
     background-color: rgb(37, 22, 2);
     margin: auto auto;

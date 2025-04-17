@@ -1,7 +1,6 @@
 import { Simulation } from "./simulation/Simulation.js";
 
 const canvas = document.getElementById("canvas");
-var simulation = new Simulation(canvas);
 
 window.addEventListener("load", () => {
     const vpWidth = window.innerWidth;
@@ -15,10 +14,22 @@ window.addEventListener("load", () => {
     canvas.height = vpHeight - extraHeightMargin;
 })
 
-document.getElementById("btnPlay").addEventListener("click", function(event) {
-    document.getElementById("btnStop").disabled = false;    
+var simulation = new Simulation(canvas, 0);
+var txtAntsPerColony = document.getElementById("txtAntsPerColony");
+var btnPlay = document.getElementById("btnPlay");
+var btnStop = document.getElementById("btnStop");
+
+
+txtAntsPerColony.addEventListener("change", function(event) {
+    simulation.setAntsPerColony(event.target.value);
+    btnPlay.disabled = false;
+})
+
+btnPlay.addEventListener("click", function(event) {
+    btnStop.disabled = false;    
     if (event.target.value === "\u25BA Play simulation") {
         event.target.value = "\u275A\u275A Pause simulation";
+        txtAntsPerColony.disabled = true;
         simulation.start();    
     } else {
         event.target.value = "\u25BA Play simulation";
@@ -27,8 +38,9 @@ document.getElementById("btnPlay").addEventListener("click", function(event) {
     
 });
 
-document.getElementById("btnStop").addEventListener("click", function(event) {
+btnStop.addEventListener("click", function(event) {
     simulation.stop();
     event.target.disabled = true;
-    document.getElementById("btnPlay").value = "\u25BA Play simulation";
+    txtAntsPerColony.disabled = false;
+    btnPlay.value = "\u25BA Play simulation";
 })

@@ -14,7 +14,11 @@
                 <div>SIMULATION MENU</div>
                 <ul class="submenu">
                     <li>
-                        <input type="button" value="&#9658; Play simulation" id="btnPlay">
+                        <input type="number" id="txtAntsPerColony" placeholder="Ants per colony" min="1">
+                    </li>
+
+                    <li>
+                        <input type="button" value="&#9658; Play simulation" id="btnPlay" disabled>
                     </li>
 
                     <li>
@@ -28,7 +32,6 @@
 
     <script type="module" src="ant/AntWorker.js"></script>
     <script type="module" src="ant/Colony.js"></script>
-    <!-- <script type="module" src="colony-test.js"></script> -->
      <script type="module" src="simulation/Simulation.js"></script>
      <script type="module" src="simulation-test.js"></script>
 </body>

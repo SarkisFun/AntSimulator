@@ -3,7 +3,6 @@ import { Colony } from "../ant/Colony.js";
 // Global
 const ZOOM_SCALE_FACTOR = 1.1;
 const MAX_ZOOM = 5;
-const NUMBER_OF_ANTS = 1;
 
 // Statuses
 const STOPPED = 0;
@@ -18,12 +17,17 @@ export class Simulation {
     static minZoom = 1;
     static maxZoom = MAX_ZOOM;
 
-    constructor(canvas) {
+    constructor(canvas, antsPerColony) {
         Simulation.canvas = canvas;
         Simulation.ctx = canvas.getContext('2d');
         this.status = STOPPED;
         this.colony = null;
+        this.antsPerColony = antsPerColony;
         this.mouseWheelListener();
+    }
+
+    setAntsPerColony(antsPerColony) {
+        this.antsPerColony = antsPerColony;
     }
 
     mouseWheelListener(){
@@ -67,7 +71,7 @@ export class Simulation {
         }
 
         if (this.status === STOPPED) {
-            this.colony = new Colony(NUMBER_OF_ANTS, Simulation.canvas.width/2, Simulation.canvas.height/2);
+            this.colony = new Colony(this.antsPerColony, Simulation.canvas.width/2, Simulation.canvas.height/2);
 
             this.offsetX = 0;
             this.offsetY = 0;
