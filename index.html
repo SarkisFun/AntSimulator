@@ -7,7 +7,24 @@
     <link rel="stylesheet" href="main.css">
 </head>
 <body>
-    <canvas id="canvas" width="1900px" height="900px"></canvas>
+
+    <main>
+        <menu id="menu">
+            <li>
+                <div>SIMULATION MENU</div>
+                <ul class="submenu">
+                    <li>
+                        <input type="button" value="&#9658; Play simulation" id="btnPlay">
+                    </li>
+
+                    <li>
+                        <input type="button" value="&#9209; Stop simulation" id="btnStop">
+                    </li>
+                </ul>
+            </li>
+        </menu>
+        <canvas id="canvas"></canvas>
+    </main>
 
     <script type="module" src="ant/AntWorker.js"></script>
     <script type="module" src="ant/Colony.js"></script>

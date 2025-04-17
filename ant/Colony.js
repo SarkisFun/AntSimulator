@@ -5,8 +5,10 @@ export class Colony {
     static scale = 70;
 
     constructor(antNumber, x, y) {
-        this.x = x - Colony.scale /2;
-        this.y = y - Colony.scale /2;
+        // this.x = x - Colony.scale /2;
+        // this.y = y - Colony.scale /2;
+        this.x = x;
+        this.y = y;
         this.workers = [];
         for (let i = 0; i < antNumber; i++) {
             this.workers.push(new AntWorker(x, y));
@@ -18,9 +20,11 @@ export class Colony {
         let ctx = canvas.getContext('2d');
         if (Colony.img.complete) {
             ctx.drawImage(Colony.img, this.x, this.y, Colony.scale, Colony.scale);
+            //ctx.drawImage(Colony.img, this.x, this.y);
         } else {
             Colony.img.onload = () => {
                 ctx.drawImage(Colony.img, this.x, this.y, Colony.scale, Colony.scale);
+                //ctx.drawImage(Colony.img, this.x, this.y);
             };
         }
         

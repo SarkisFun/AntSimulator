@@ -1,6 +1,16 @@
-const ZOOM_SCALE_FACTOR = 1.1;
-
 import { Colony } from "../ant/Colony.js";
+
+// Global
+const ZOOM_SCALE_FACTOR = 1.1;
+const MAX_ZOOM = 5;
+const NUMBER_OF_ANTS = 1;
+
+// Statuses
+const STOPPED = 0;
+const STARTED = 1;
+const PAUSED = 2;
+
+const TEMP = 10;
 
 export class Simulation {
     static canvas;
@@ -8,11 +18,12 @@ export class Simulation {
     static scale = 1;
     static scaleFactor = ZOOM_SCALE_FACTOR;
     static minZoom = 1;
-    static maxZoom = 5;
+    static maxZoom = MAX_ZOOM;
 
     constructor(canvas) {
         Simulation.canvas = canvas;
         Simulation.ctx = canvas.getContext('2d');
+        this.status = STOPPED;
         this.colony = null;
         this.mouseWheelListener();
     }
@@ -50,23 +61,59 @@ export class Simulation {
     }
 
     start() {
-        this.colony = new Colony(1000, canvas.width/2, canvas.height/2);
+        if (this.status === PAUSED) {
+            this.continue = true;
+            this.status = STARTED;
+            this.animationLoop();
+            return;
+        }
 
-        this.offsetX = 0;
-        this.offsetY = 0;
+        if (this.status === STOPPED) {
+            this.colony = new Colony(NUMBER_OF_ANTS, Simulation.canvas.width/2, Simulation.canvas.height/2);
 
-        this.animationLoop();
+            this.offsetX = 0;
+            this.offsetY = 0;
+
+            this.status = STARTED;
+
+            this.continue = true;
+
+            this.animationLoop();
+        }
+    }
+
+    stop() {
+        this.continue = false;
+        this.status = STOPPED;
+    }
+
+    pause() {
+        if (this.status === STARTED) {
+            this.status = PAUSED;
+            this.continue = false;
+        }
     }
 
     animationLoop() {
         Simulation.ctx.clearRect(0, 0, Simulation.canvas.width, Simulation.canvas.height); // Clear canvas once per frame
         Simulation.ctx.save();
 
+        /**************************************************************************************************/
+        Simulation.ctx.fillStyle = "white";
+        Simulation.ctx.fillRect(0,0,TEMP,TEMP);
+        Simulation.ctx.fillRect(Simulation.canvas.width - TEMP,Simulation.canvas.height - TEMP,TEMP,TEMP);
+        Simulation.ctx.fillRect(0,Simulation.canvas.height - TEMP,TEMP,TEMP);
+        Simulation.ctx.fillRect(Simulation.canvas.width - TEMP,0,TEMP,TEMP);
+        Simulation.ctx.fillRect(Simulation.canvas.width/2, Simulation.canvas.height/2, 2,2);
+        /**************************************************************************************************/
         Simulation.ctx.translate(this.offsetX, this.offsetY);
         Simulation.ctx.scale(Simulation.scale, Simulation.scale);
 
         this.colony.update(Simulation.canvas);
         Simulation.ctx.restore();
-        requestAnimationFrame(this.animationLoop.bind(this));
+
+        if (this.continue) {
+            requestAnimationFrame(this.animationLoop.bind(this));
+        }
     }   
 }
