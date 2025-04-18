@@ -5,8 +5,6 @@ export class Colony {
     static scale = 70;
 
     constructor(antNumber, x, y) {
-        // this.x = x - Colony.scale /2;
-        // this.y = y - Colony.scale /2;
         this.x = x - Colony.scale/2;
         this.y = y - Colony.scale/2;
         this.workers = [];
@@ -20,25 +18,17 @@ export class Colony {
         let ctx = canvas.getContext('2d');
         if (Colony.img.complete) {
             ctx.drawImage(Colony.img, this.x, this.y, Colony.scale, Colony.scale);
-            //ctx.drawImage(Colony.img, this.x, this.y);
         } else {
             Colony.img.onload = () => {
                 ctx.drawImage(Colony.img, this.x, this.y, Colony.scale, Colony.scale);
-                //ctx.drawImage(Colony.img, this.x, this.y);
             };
-        }
-        
+        }       
     }
 
     update(canvas) {
-        let ctx = canvas.getContext('2d');
-        //ctx.save();
-        //ctx.clearRect(0, 0, canvas.width, canvas.height);
-        //ctx.scale(this.zoomScale, this.zoomScale);
         this.draw(canvas)
         this.workers.forEach(ant =>{
             ant.update(canvas);
         });
-        //ctx.restore();
     }
 }

@@ -14,17 +14,18 @@ window.addEventListener("load", () => {
     canvas.height = vpHeight - extraHeightMargin;
 })
 
-var simulation = new Simulation(canvas, 0);
+var simulation = new Simulation(canvas);
 var txtAntsPerColony = document.getElementById("txtAntsPerColony");
 var btnPlay = document.getElementById("btnPlay");
 var btnStop = document.getElementById("btnStop");
 
-
+// Ant number text listener
 txtAntsPerColony.addEventListener("change", function(event) {
     simulation.setAntsPerColony(event.target.value);
     btnPlay.disabled = false;
 })
 
+// Play button listner
 btnPlay.addEventListener("click", function(event) {
     btnStop.disabled = false;    
     if (event.target.value === "\u25BA Play simulation") {
@@ -38,6 +39,7 @@ btnPlay.addEventListener("click", function(event) {
     
 });
 
+// Stop button listener
 btnStop.addEventListener("click", function(event) {
     simulation.stop();
     event.target.disabled = true;

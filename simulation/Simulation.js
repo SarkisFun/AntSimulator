@@ -17,12 +17,11 @@ export class Simulation {
     static minZoom = 1;
     static maxZoom = MAX_ZOOM;
 
-    constructor(canvas, antsPerColony) {
+    constructor(canvas) {
         Simulation.canvas = canvas;
         Simulation.ctx = canvas.getContext('2d');
         this.status = STOPPED;
         this.colony = null;
-        this.antsPerColony = antsPerColony;
         this.mouseWheelListener();
     }
 
@@ -87,6 +86,7 @@ export class Simulation {
     stop() {
         this.continue = false;
         this.status = STOPPED;
+        Simulation.ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
     pause() {
@@ -98,16 +98,23 @@ export class Simulation {
 
     animationLoop() {
         Simulation.ctx.clearRect(0, 0, Simulation.canvas.width, Simulation.canvas.height); // Clear canvas once per frame
+        
         Simulation.ctx.save();
-
+        // zoom
         Simulation.ctx.translate(this.offsetX, this.offsetY);
         Simulation.ctx.scale(Simulation.scale, Simulation.scale);
-
+        // animation
         this.colony.update(Simulation.canvas);
+
         Simulation.ctx.restore();
 
-        if (this.continue) {
-            requestAnimationFrame(this.animationLoop.bind(this));
+        switch (this.status) {
+            case STARTED:
+                requestAnimationFrame(this.animationLoop.bind(this));
+                break;
+            case STOPPED:
+                Simulation.ctx.clearRect(0, 0, canvas.width, canvas.height);
+                break;
         }
     }   
 }

@@ -28,8 +28,6 @@ main {
 #menu > li {
     background-color: rgb(49, 54, 58);
     padding: 5px 0 20px 0;
-    /* border-bottom: 4px solid rgb(57, 63, 68); */
-
 }
 
 #menu > li > div {
