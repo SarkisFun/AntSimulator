@@ -25,15 +25,24 @@ main {
     text-align: center;
 }
 
+#menu:first-child {
+    padding-bottom: 0; 
+}
+
+.menuTitle {
+    padding: 20px 0 40px 0;  
+    margin: 20px 0 0 0;
+}
+
 #menu > li {
     background-color: rgb(49, 54, 58);
-    padding: 5px 0 20px 0;
+    padding: 5px 0 5px 0;
 }
 
 #menu > li > div {
-    padding-top: 5px;
-    padding-bottom: 5px;
-    border-bottom: 2px solid rgb(57, 63, 68);
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-top: 10px solid rgb(57, 63, 68);
 }
 
 #menu .submenu {
@@ -42,13 +51,17 @@ main {
 }
 
 .submenu > li {
-    padding-top: 3px;
-    padding-bottom: 3px;
-    border-bottom: 2px solid rgb(57, 63, 68);
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-top: 5px solid rgb(57, 63, 68);
     display: flex;
     flex-direction: column;
     row-gap: 10px;
     align-items: center;
+}
+
+.submenu > li:hover {
+    background-color: rgb(52, 59, 65);
 }
 
 .submenu input[type="button"] {
@@ -58,6 +71,10 @@ main {
 
 .submenu input[type="number"] {
     width: 60px;
+}
+
+.submenu img {
+    width: 80px;
 }
 
 #canvas {
