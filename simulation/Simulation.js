@@ -31,7 +31,7 @@ export class Simulation {
         const x = mouseX - rect.left;
         const y = mouseY - rect.top;
 
-        if (this.status === STOPPED && !this.placedColony) {
+        if (this.status === STOPPED) {
             //this.colony = new Colony(this.antsPerColony, x, y);
             this.colony.setCoordinates(x, y);
             this.placedColony = true;

@@ -56,7 +56,6 @@ btnStop.addEventListener("click", function(event) {
 document.getElementById("drawColonyTool").addEventListener("click", () => {
     if (selectedTool != 1) {
         selectedTool = 1;
-        //canvas.style.cursor = "not-allowed";
         canvas.style.cursor = "url('img/colonyCursor.png') 64 64,auto";
     } else {
         selectedTool = 0;
