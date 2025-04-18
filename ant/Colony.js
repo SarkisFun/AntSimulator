@@ -4,14 +4,20 @@ export class Colony {
     static img = new Image();
     static scale = 70;
 
-    constructor(antNumber, x, y) {
+    constructor() {
+        Colony.img.src = "./img/colony.png";
+    }
+
+    setAntNumber(antNumber) {
         this.antNumber = antNumber;
-        this.topLeftX = x - Colony.scale/2;
-        this.topLeftY = y - Colony.scale/2;
+        this.resetAnts();
+    }
+
+    setCoordinates(x, y) {
         this.x = x;
         this.y = y;
-        this.resetAnts()
-        Colony.img.src = "./img/colony.png";
+        this.topLeftX = x - Colony.scale/2;
+        this.topLeftY = y - Colony.scale/2;
     }
 
     resetAnts() {
