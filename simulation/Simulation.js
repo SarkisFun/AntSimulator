@@ -63,7 +63,6 @@ export class Simulation {
 
     start() {
         if (this.status === PAUSED) {
-            this.continue = true;
             this.status = STARTED;
             this.animationLoop();
             return;
@@ -77,14 +76,11 @@ export class Simulation {
 
             this.status = STARTED;
 
-            this.continue = true;
-
             this.animationLoop();
         }
     }
 
     stop() {
-        this.continue = false;
         this.status = STOPPED;
         Simulation.ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
@@ -92,7 +88,6 @@ export class Simulation {
     pause() {
         if (this.status === STARTED) {
             this.status = PAUSED;
-            this.continue = false;
         }
     }
 
