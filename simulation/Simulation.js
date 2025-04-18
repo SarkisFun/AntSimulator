@@ -1,8 +1,10 @@
 import { Colony } from "../ant/Colony.js";
+import { MapGrid } from "../map/mapGrid.js";
 
 // Global
 const ZOOM_SCALE_FACTOR = 1.1;
 const MAX_ZOOM = 5;
+const DEFAULT_TILE_SIZE = 1;
 
 // Statuses
 const STOPPED = 0;
@@ -24,6 +26,12 @@ export class Simulation {
         this.placedColony = false;
         this.colony = new Colony();
         this.mouseWheelListener();
+
+        /**********************
+        this.map = new MapGrid(DEFAULT_TILE_SIZE, canvas.width, canvas.height);
+        this.map.createWall(50, 50, 10);
+        this.map.createWall(this.map.mapWidth - 20, this.map.mapHeight - 20, 20);
+        ***********************/
     }
 
     setColony(mouseX, mouseY) {
@@ -32,7 +40,6 @@ export class Simulation {
         const y = mouseY - rect.top;
 
         if (this.status === STOPPED) {
-            //this.colony = new Colony(this.antsPerColony, x, y);
             this.colony.setCoordinates(x, y);
             this.placedColony = true;
             Simulation.ctx.clearRect(0,0,Simulation.canvas.width, Simulation.canvas.height);
@@ -117,6 +124,7 @@ export class Simulation {
         Simulation.ctx.translate(this.offsetX, this.offsetY);
         Simulation.ctx.scale(Simulation.scale, Simulation.scale);
         // animation
+        this.map.update(Simulation.canvas);
         this.colony.update(Simulation.canvas);
 
         Simulation.ctx.restore();

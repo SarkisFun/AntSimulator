@@ -1,6 +1,16 @@
 import { Simulation } from "./simulation/Simulation.js";
 
+// Drawing tools
+const NO_TOOL = 0;
+const COLONY_TOOL = 1;
+
 const canvas = document.getElementById("canvas");
+const txtAntsPerColony = document.getElementById("txtAntsPerColony");
+const btnPlay = document.getElementById("btnPlay");
+const btnStop = document.getElementById("btnStop");
+var simulation = null;
+var selectedTool;
+var placedColony;
 
 window.addEventListener("load", () => {
     const vpWidth = window.innerWidth;
@@ -10,19 +20,17 @@ window.addEventListener("load", () => {
 
     const menuWidth = parseFloat(getComputedStyle(menu).width);
 
+    console.log(`Initial canvas dimensions: ${canvas.width} x ${canvas.height}`);
     canvas.width = vpWidth - menuWidth - extraWidthMargin;
     canvas.height = vpHeight - extraHeightMargin;
+    console.log(`Updated canvas dimensions: ${canvas.width} x ${canvas.height}`);
+
+    simulation = new Simulation(canvas);
+    selectedTool = NO_TOOL;
+    placedColony = false;
+
+    simulation.setAntsPerColony(txtAntsPerColony.value);
 })
-
-var simulation = new Simulation(canvas);
-var txtAntsPerColony = document.getElementById("txtAntsPerColony");
-var btnPlay = document.getElementById("btnPlay");
-var btnStop = document.getElementById("btnStop");
-const drawingTool = ["", "colony"];
-var selectedTool = 0;
-var placedColony = false;
-
-simulation.setAntsPerColony(txtAntsPerColony.value);
 
 // Ant number text listener
 txtAntsPerColony.addEventListener("change", function(event) {
@@ -54,11 +62,11 @@ btnStop.addEventListener("click", function(event) {
 
 // Colony drawing tool
 document.getElementById("drawColonyTool").addEventListener("click", () => {
-    if (selectedTool != 1) {
-        selectedTool = 1;
+    if (selectedTool != COLONY_TOOL) {
+        selectedTool = COLONY_TOOL;
         canvas.style.cursor = "url('img/colonyCursor.png') 64 64,auto";
     } else {
-        selectedTool = 0;
+        selectedTool = NO_TOOL;
         canvas.style.cursor = "auto";
     }
     
@@ -67,11 +75,11 @@ document.getElementById("drawColonyTool").addEventListener("click", () => {
 // Draw on canvas listener
 canvas.addEventListener("click", function(event) {
     switch (selectedTool) {
-        case 1:
+        case COLONY_TOOL:
             simulation.setColony(event.clientX, event.clientY);
             placedColony = true;
             btnPlay.disabled = false;
-            selectedTool = 0;
+            selectedTool = NO_TOOL;
             canvas.style.cursor = "auto";
             break;
     }
