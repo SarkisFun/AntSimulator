@@ -11,7 +11,6 @@ export class AntWorker {
         AntWorker.img.src = './img/worker.png';
         this.posX = posX - AntWorker.scale /2;
         this.posY = posY - AntWorker.scale /2;
-        //this.speed = DEFAULT_SPEED;
         this.speed = Math.random() * (MAX_SEED - MIN_SPEED) + MIN_SPEED;
         this.size = DEFAULT_SIZE;
         this.angle = Math.random() * Math.PI * 2;

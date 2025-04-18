@@ -21,8 +21,22 @@ export class Simulation {
         Simulation.canvas = canvas;
         Simulation.ctx = canvas.getContext('2d');
         this.status = STOPPED;
+        this.placedColony = false;
         this.colony = null;
         this.mouseWheelListener();
+    }
+
+    setColony(mouseX, mouseY) {
+        const rect = Simulation.canvas.getBoundingClientRect();
+        const x = mouseX - rect.left;
+        const y = mouseY - rect.top;
+
+        if (this.status === STOPPED && !this.placedColony) {
+            this.colony = new Colony(this.antsPerColony, x, y);
+            this.placedColony = true;
+            Simulation.ctx.clearRect(0,0,Simulation.canvas.width, Simulation.canvas.height);
+            this.colony.draw(Simulation.canvas);
+        }
     }
 
     setAntsPerColony(antsPerColony) {
@@ -69,7 +83,7 @@ export class Simulation {
         }
 
         if (this.status === STOPPED) {
-            this.colony = new Colony(this.antsPerColony, Simulation.canvas.width/2, Simulation.canvas.height/2);
+            this.colony.resetAnts();
 
             this.offsetX = 0;
             this.offsetY = 0;
@@ -83,6 +97,8 @@ export class Simulation {
     stop() {
         this.status = STOPPED;
         Simulation.ctx.clearRect(0, 0, canvas.width, canvas.height);
+        this.colony.resetAnts();
+        this.placedColony = false;
     }
 
     pause() {
