@@ -18,6 +18,7 @@ var simulation = new Simulation(canvas);
 var txtAntsPerColony = document.getElementById("txtAntsPerColony");
 var btnPlay = document.getElementById("btnPlay");
 var btnStop = document.getElementById("btnStop");
+simulation.setAntsPerColony(txtAntsPerColony.value);
 
 // Ant number text listener
 txtAntsPerColony.addEventListener("change", function(event) {
