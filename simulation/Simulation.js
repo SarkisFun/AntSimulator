@@ -4,7 +4,7 @@ import { MapGrid } from "../map/mapGrid.js";
 // Global
 const ZOOM_SCALE_FACTOR = 1.1;
 const MAX_ZOOM = 5;
-const DEFAULT_TILE_SIZE = 1;
+const DEFAULT_TILE_SIZE = 3;
 
 // Statuses
 const STOPPED = 0;
@@ -25,13 +25,9 @@ export class Simulation {
         this.status = STOPPED;
         this.placedColony = false;
         this.colony = new Colony();
-        this.mouseWheelListener();
-
         this.map = new MapGrid(DEFAULT_TILE_SIZE, canvas.width, canvas.height);
-        /************************/
-        this.map.createWall(50, 50, 10);
-        this.map.createWall(this.map.mapWidth - 20, this.map.mapHeight - 20, 20);
-        //************************/
+
+        this.mouseWheelListener();
     }
 
     setColony(mouseX, mouseY) {

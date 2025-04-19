@@ -6,9 +6,8 @@ export class MapGrid {
     constructor(tileSize, width, height) {
         this.tileWidth = tileSize;
         this.tileHeight = tileSize;
-        console.log(`Canvas dimentions when calling map constructor: ${width} x ${height}`)
-        this.mapWidth = width / tileSize;
-        this.mapHeight = height / tileSize;
+        this.mapWidth = Math.floor(width / tileSize);
+        this.mapHeight = Math.floor(height / tileSize);
         this.grid = new Array(this.mapWidth);
         for (let i = 0; i < this.mapWidth; i++) {
             this.grid[i] = new Array(this.mapHeight);  
@@ -33,7 +32,11 @@ export class MapGrid {
         }
     }
 
-    createWall(x, y, radius) {
+    createWall(canvas, mouseX, mouseY, radius) {
+        const rect = canvas.getBoundingClientRect();
+        const x = Math.floor((mouseX - rect.left) / this.tileWidth);
+        const y = Math.floor((mouseY - rect.top) / this.tileHeight);
+
         for (let i = -radius; i <= radius; i++) {
             for (let j = -radius; j <= radius; j++) {
                 const newX = x + i;
@@ -47,6 +50,7 @@ export class MapGrid {
                 }
             }   
         }
+        this.draw(canvas);
     }
 
     update(canvas) {

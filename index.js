@@ -12,6 +12,7 @@ const btnStop = document.getElementById("btnStop");
 var simulation = null;
 var selectedTool;
 var placedColony;
+var mouseDown = false;
 
 window.addEventListener("load", () => {
     const vpWidth = window.innerWidth;
@@ -21,10 +22,8 @@ window.addEventListener("load", () => {
 
     const menuWidth = parseFloat(getComputedStyle(menu).width);
 
-    console.log(`Initial canvas dimensions: ${canvas.width} x ${canvas.height}`);
     canvas.width = vpWidth - menuWidth - extraWidthMargin;
     canvas.height = vpHeight - extraHeightMargin;
-    console.log(`Updated canvas dimensions: ${canvas.width} x ${canvas.height}`);
 
     simulation = new Simulation(canvas);
     selectedTool = NO_TOOL;
@@ -72,6 +71,7 @@ document.getElementById("drawColonyTool").addEventListener("click", () => {
     }
 })
 
+// Wall drawing tool
 document.getElementById("drawWallTool").addEventListener("click", () => {
     if (selectedTool != WALL_TOOL) {
         selectedTool = WALL_TOOL;
@@ -93,5 +93,20 @@ canvas.addEventListener("click", function(event) {
             canvas.style.cursor = "auto";
             break;
     }
-    
 })
+
+// Draw on canvas listeners (mouse hold)
+canvas.addEventListener("mousedown", () => {
+    mouseDown = true;
+})
+
+canvas.addEventListener("mouseup", () => {
+    mouseDown = false;
+})
+
+canvas.addEventListener("mousemove", function(event) {
+    if (selectedTool === WALL_TOOL && mouseDown) {
+        simulation.map.createWall(canvas, event.clientX, event.clientY, 20);
+    }
+})
+///////////////////////////////////////
