@@ -8,9 +8,8 @@ body {
 }
 
 main {
-    display: grid;
-    grid-template-columns: 8vw 90vw;
-    column-gap: 0;
+    display: flex;
+    flex-direction: row;
 }
 
 #menu {
