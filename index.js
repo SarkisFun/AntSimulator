@@ -64,7 +64,7 @@ btnStop.addEventListener("click", function(event) {
 document.getElementById("drawColonyTool").addEventListener("click", () => {
     if (selectedTool != COLONY_TOOL) {
         selectedTool = COLONY_TOOL;
-        canvas.style.cursor = "url('img/colonyCursor.png') 64 64,auto";
+        canvas.style.cursor = "url('img/colonyCursor.png') 32 32,auto";
     } else {
         selectedTool = NO_TOOL;
         canvas.style.cursor = "auto";
@@ -106,7 +106,7 @@ canvas.addEventListener("mouseup", () => {
 
 canvas.addEventListener("mousemove", function(event) {
     if (selectedTool === WALL_TOOL && mouseDown) {
-        simulation.paintWall(canvas, event.clientX, event.clientY, 20);
+        simulation.paintWall(canvas, event.clientX, event.clientY, 15);
     }
 })
 ///////////////////////////////////////
