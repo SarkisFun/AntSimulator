@@ -102,6 +102,7 @@ export class Simulation {
     stop() {
         this.status = STOPPED;
         Simulation.ctx.clearRect(0, 0, canvas.width, canvas.height);
+        //this.map.draw(Simulation.canvas); // doesn't work :(
         this.colony.resetAnts();
         this.placedColony = false;
     }

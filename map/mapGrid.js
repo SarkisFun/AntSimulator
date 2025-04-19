@@ -9,6 +9,11 @@ export class MapGrid {
         this.mapWidth = Math.floor(width / tileSize);
         this.mapHeight = Math.floor(height / tileSize);
         this.grid = new Array(this.mapWidth);
+        this.offScreenCanvas = document.createElement('canvas');
+        this.offScreenCanvas.width = width;
+        this.offScreenCanvas.height = height;
+        this.offScreenCtx = this.offScreenCanvas.getContext('2d');
+
         for (let i = 0; i < this.mapWidth; i++) {
             this.grid[i] = new Array(this.mapHeight);  
             for (let j = 0; j < this.mapHeight; j++) {
@@ -20,16 +25,7 @@ export class MapGrid {
     draw(canvas) {
         let ctx = canvas.getContext('2d');
 
-        for (let i = 0; i < this.mapWidth; i++) {
-            for (let j = 0; j < this.mapHeight; j++) {
-                switch (this.grid[i][j]) {
-                    case WALL:
-                        ctx.fillStyle = "grey";
-                        ctx.fillRect(this.tileWidth * i, this.tileHeight * j, this.tileWidth, this.tileHeight);
-                        break;
-                }
-            }            
-        }
+        ctx.drawImage(this.offScreenCanvas, 0, 0);
     }
 
     createWall(canvas, mouseX, mouseY, radius) {
@@ -47,10 +43,18 @@ export class MapGrid {
                      newY < this.mapHeight &&
                      Math.sqrt(i * i + j * j) <= radius) { // Check if Euclidean distance is within radius
                     this.grid[newX][newY] = WALL;
+
+                    this.offScreenCtx.fillStyle = "grey";
+                    this.offScreenCtx.fillRect(
+                    this.tileWidth * newX,
+                    this.tileHeight * newY,
+                    this.tileWidth,
+                    this.tileHeight
+                );
                 }
             }   
         }
-        this.draw(canvas);
+        this.draw(canvas);       
     }
 
     update(canvas) {
