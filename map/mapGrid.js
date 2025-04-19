@@ -1,5 +1,6 @@
 const EMPTY = 0;
 const WALL = 1;
+const COLONY = 2;
 
 export class MapGrid {
 
@@ -13,6 +14,8 @@ export class MapGrid {
         this.offScreenCanvas.width = width;
         this.offScreenCanvas.height = height;
         this.offScreenCtx = this.offScreenCanvas.getContext('2d');
+        this.colonyX = -1;
+        this.colonyY = -1;
 
         for (let i = 0; i < this.mapWidth; i++) {
             this.grid[i] = new Array(this.mapHeight);  
@@ -20,6 +23,17 @@ export class MapGrid {
                 this.grid[i][j] = EMPTY;
             }   
         }
+    }
+
+    createColony(canvasX, canvasY) {
+        if (this.colonyX != -1) {
+            this.grid[this.colonyX][this.colonyY] = EMPTY;
+        }
+
+        this.colonyX = Math.floor(canvasX / this.tileWidth);
+        this.colonyY = Math.floor(canvasY / this.tileHeight);
+
+        this.grid[this.colonyX][this.colonyY] = COLONY;
     }
 
     draw(canvas) {
