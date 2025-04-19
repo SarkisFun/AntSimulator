@@ -3,6 +3,7 @@ import { Simulation } from "./simulation/Simulation.js";
 // Drawing tools
 const NO_TOOL = 0;
 const COLONY_TOOL = 1;
+const WALL_TOOL = 2;
 
 const canvas = document.getElementById("canvas");
 const txtAntsPerColony = document.getElementById("txtAntsPerColony");
@@ -69,7 +70,16 @@ document.getElementById("drawColonyTool").addEventListener("click", () => {
         selectedTool = NO_TOOL;
         canvas.style.cursor = "auto";
     }
-    
+})
+
+document.getElementById("drawWallTool").addEventListener("click", () => {
+    if (selectedTool != WALL_TOOL) {
+        selectedTool = WALL_TOOL;
+        canvas.style.cursor = "url('img/wall.png') 64 45,auto"
+    } else {
+        selectedTool = NO_TOOL;
+        canvas.style.cursor = "auto";
+    }
 })
 
 // Draw on canvas listener

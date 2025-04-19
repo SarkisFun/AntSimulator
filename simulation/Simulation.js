@@ -27,11 +27,11 @@ export class Simulation {
         this.colony = new Colony();
         this.mouseWheelListener();
 
-        /**********************
         this.map = new MapGrid(DEFAULT_TILE_SIZE, canvas.width, canvas.height);
+        /************************/
         this.map.createWall(50, 50, 10);
         this.map.createWall(this.map.mapWidth - 20, this.map.mapHeight - 20, 20);
-        ***********************/
+        //************************/
     }
 
     setColony(mouseX, mouseY) {

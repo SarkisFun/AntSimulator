@@ -37,12 +37,12 @@ main {
 #menu > li {
     background-color: rgb(49, 54, 58);
     padding: 5px 0 5px 0;
+    border: 2px double rgb(85, 102, 114);
 }
 
 #menu > li > div {
     padding-top: 15px;
     padding-bottom: 15px;
-    border-top: 10px solid rgb(57, 63, 68);
 }
 
 #menu .submenu {
