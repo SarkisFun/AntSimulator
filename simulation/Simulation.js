@@ -106,9 +106,16 @@ export class Simulation {
         }
     }
 
-    stop() {
-        this.status = STOPPED;
-        this.colony.resetAnts();
+    stop() {        
+        if (this.status == PAUSED) {
+            this.status = STOPPED;
+            this.animationLoop();
+            this.colony.resetAnts();
+        } else {
+            this.status = STOPPED;
+            this.colony.resetAnts();
+        }
+        
     }
 
     pause() {
@@ -135,7 +142,8 @@ export class Simulation {
                 requestAnimationFrame(this.animationLoop.bind(this));
                 break;
             case STOPPED:
-                Simulation.ctx.clearRect(0, 0, canvas.width, canvas.height);
+                Simulation.ctx.clearRect(0, 0, canvas.width, canvas.height);               
+            case PAUSED:
                 this.map.draw(Simulation.canvas);
                 break;
         }

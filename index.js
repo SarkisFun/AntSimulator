@@ -41,12 +41,12 @@ txtAntsPerColony.addEventListener("change", function(event) {
 // Play button listener
 btnPlay.addEventListener("click", function(event) {
     btnStop.disabled = false;    
-    if (event.target.value === "\u25BA Play simulation") {
-        event.target.value = "\u275A\u275A Pause simulation";
+    if (event.target.value === "\u25BA Reproducir") {
+        event.target.value = "\u275A\u275A Pausar";
         txtAntsPerColony.disabled = true;
         simulation.start();    
     } else {
-        event.target.value = "\u25BA Play simulation";
+        event.target.value = "\u25BA Reproducir";
         simulation.pause();
     }   
 });
@@ -57,11 +57,11 @@ btnStop.addEventListener("click", function(event) {
     event.target.disabled = true;
     txtAntsPerColony.disabled = false;
     placedColony = false;
-    btnPlay.value = "\u25BA Play simulation";
+    btnPlay.value = "\u25BA Reproducir";
 })
 
 // Colony drawing tool
-document.getElementById("drawColonyTool").addEventListener("click", () => {
+document.getElementById("btnDrawColony").addEventListener("click", () => {
     if (selectedTool != COLONY_TOOL) {
         selectedTool = COLONY_TOOL;
         canvas.style.cursor = "url('img/colonyCursor.png') 32 32,auto";
@@ -72,7 +72,7 @@ document.getElementById("drawColonyTool").addEventListener("click", () => {
 })
 
 // Wall drawing tool
-document.getElementById("drawWallTool").addEventListener("click", () => {
+document.getElementById("btnDrawWall").addEventListener("click", () => {
     if (selectedTool != WALL_TOOL) {
         selectedTool = WALL_TOOL;
         canvas.style.cursor = "url('img/wall.png') 64 45,auto"

@@ -14,7 +14,7 @@ main {
 }
 
 #menu {
-    width: 160px;
+    width: 110px;
     height: 98vh;
     padding: 0;
     margin: 0;
@@ -65,7 +65,7 @@ main {
 }
 
 .submenu input[type="button"] {
-    width: 140px;
+    width: 100px;
     height: 50px;
 }
 
@@ -75,6 +75,18 @@ main {
 
 .submenu img {
     width: 80px;
+}
+
+#btnDrawColony {
+    background-image: url(img/colony_menu.png);
+    width: 80px;
+    height: 80px;
+}
+
+#btnDrawWall {
+    background-image: url(img/wall_menu.png);
+    width: 80px;
+    height: 80px;
 }
 
 #canvas {
