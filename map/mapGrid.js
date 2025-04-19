@@ -38,7 +38,7 @@ export class MapGrid {
                 const newX = x + i;
                 const newY = y + j;
 
-                // Che if coordinates are within bounds and radius
+                // Check if coordinates are within bounds and radius
                 if (newX >= 0 && newX < this.mapWidth && newY >= 0 &&
                      newY < this.mapHeight &&
                      Math.sqrt(i * i + j * j) <= radius) { // Check if Euclidean distance is within radius

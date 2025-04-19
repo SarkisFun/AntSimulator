@@ -39,6 +39,7 @@ export class Simulation {
             this.colony.setCoordinates(x, y);
             this.placedColony = true;
             Simulation.ctx.clearRect(0,0,Simulation.canvas.width, Simulation.canvas.height);
+            this.map.draw(Simulation.canvas);
             this.colony.draw(Simulation.canvas);
         }
     }
@@ -46,6 +47,12 @@ export class Simulation {
     setAntsPerColony(antsPerColony) {
         this.antsPerColony = antsPerColony;
         this.colony.setAntNumber(antsPerColony);
+    }
+
+    paintWall(canvas, mouseX, mouseY, radius) {
+        if (this.status === STOPPED) {
+            this.map.createWall(canvas, mouseX, mouseY, radius);
+        }
     }
 
     mouseWheelListener(){
@@ -101,10 +108,7 @@ export class Simulation {
 
     stop() {
         this.status = STOPPED;
-        Simulation.ctx.clearRect(0, 0, canvas.width, canvas.height);
-        //this.map.draw(Simulation.canvas); // doesn't work :(
         this.colony.resetAnts();
-        this.placedColony = false;
     }
 
     pause() {
@@ -132,6 +136,7 @@ export class Simulation {
                 break;
             case STOPPED:
                 Simulation.ctx.clearRect(0, 0, canvas.width, canvas.height);
+                this.map.draw(Simulation.canvas);
                 break;
         }
     }   

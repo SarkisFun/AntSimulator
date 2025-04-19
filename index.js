@@ -106,7 +106,7 @@ canvas.addEventListener("mouseup", () => {
 
 canvas.addEventListener("mousemove", function(event) {
     if (selectedTool === WALL_TOOL && mouseDown) {
-        simulation.map.createWall(canvas, event.clientX, event.clientY, 20);
+        simulation.paintWall(canvas, event.clientX, event.clientY, 20);
     }
 })
 ///////////////////////////////////////
