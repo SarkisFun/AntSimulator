@@ -88,6 +88,12 @@ main {
     height: 80px;
 }
 
+#btnDrawFood {
+    background-image: url(img/comida_menu.png);
+    width: 80px;
+    height: 80px;
+}
+
 #canvas {
     background-color: rgb(37, 22, 2);
     margin: auto auto;

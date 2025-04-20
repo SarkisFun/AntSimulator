@@ -55,6 +55,12 @@ export class Simulation {
         }
     }
 
+    paintFood(canvas, mouseX, mouseY, radius) {
+        if (this.status === STOPPED) {
+            this.map.createFood(canvas, mouseX, mouseY, radius);
+        }
+    }
+
     mouseWheelListener(){
         Simulation.canvas.addEventListener("wheel", (event) => {
             event.preventDefault();

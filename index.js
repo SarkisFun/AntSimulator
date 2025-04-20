@@ -4,6 +4,7 @@ import { Simulation } from "./simulation/Simulation.js";
 const NO_TOOL = 0;
 const COLONY_TOOL = 1;
 const WALL_TOOL = 2;
+const FOOD_TOOL = 3;
 
 const canvas = document.getElementById("canvas");
 const txtAntsPerColony = document.getElementById("txtAntsPerColony");
@@ -75,7 +76,17 @@ document.getElementById("btnDrawColony").addEventListener("click", () => {
 document.getElementById("btnDrawWall").addEventListener("click", () => {
     if (selectedTool != WALL_TOOL) {
         selectedTool = WALL_TOOL;
-        canvas.style.cursor = "url('img/wall.png') 64 45,auto"
+        canvas.style.cursor = "url('img/wall.png') 64 45,auto";
+    } else {
+        selectedTool = NO_TOOL;
+        canvas.style.cursor = "auto";
+    }
+})
+
+document.getElementById("btnDrawFood").addEventListener("click", () => {
+    if (selectedTool != FOOD_TOOL) {
+        selectedTool = FOOD_TOOL;
+        canvas.style.cursor = "url('img/food.png') 21 15,auto";
     } else {
         selectedTool = NO_TOOL;
         canvas.style.cursor = "auto";
@@ -107,6 +118,16 @@ canvas.addEventListener("mouseup", () => {
 canvas.addEventListener("mousemove", function(event) {
     if (selectedTool === WALL_TOOL && mouseDown) {
         simulation.paintWall(canvas, event.clientX, event.clientY, 15);
+    }
+    if (mouseDown) {
+        switch (selectedTool) {
+            case WALL_TOOL:
+                simulation.paintWall(canvas, event.clientX, event.clientY, 15);
+                break;
+            case FOOD_TOOL:
+                simulation.paintFood(canvas, event.clientX, event.clientY, 5);
+                break;
+        }
     }
 })
 ///////////////////////////////////////

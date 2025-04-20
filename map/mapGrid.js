@@ -1,6 +1,7 @@
 const EMPTY = 0;
 const WALL = 1;
 const COLONY = 2;
+const FOOD = 3;
 
 export class MapGrid {
 
@@ -36,12 +37,6 @@ export class MapGrid {
         this.grid[this.colonyX][this.colonyY] = COLONY;
     }
 
-    draw(canvas) {
-        let ctx = canvas.getContext('2d');
-
-        ctx.drawImage(this.offScreenCanvas, 0, 0);
-    }
-
     createWall(canvas, mouseX, mouseY, radius) {
         const rect = canvas.getBoundingClientRect();
         const x = Math.floor((mouseX - rect.left) / this.tileWidth);
@@ -55,7 +50,8 @@ export class MapGrid {
                 // Check if coordinates are within bounds and radius
                 if (newX >= 0 && newX < this.mapWidth && newY >= 0 &&
                      newY < this.mapHeight &&
-                     Math.sqrt(i * i + j * j) <= radius) { // Check if Euclidean distance is within radius
+                     Math.sqrt(i * i + j * j) <= radius && // Check if Euclidean distance is within radius
+                     this.grid[newX][newY] != COLONY) { 
                     this.grid[newX][newY] = WALL;
 
                     this.offScreenCtx.fillStyle = "grey";
@@ -69,6 +65,45 @@ export class MapGrid {
             }   
         }
         this.draw(canvas);       
+    }
+
+    createFood(canvas, mouseX, mouseY, radius) {
+        const rect = canvas.getBoundingClientRect();
+        const x = Math.floor((mouseX - rect.left) / this.tileWidth);
+        const y = Math.floor((mouseY - rect.top) / this.tileHeight);
+
+        for (let i = -radius; i <= radius; i++) {
+            for (let j = -radius; j <= radius; j++) {
+                const newX = x + i;
+                const newY = y + j;
+
+                // Check if coordinates are within bounds and radius
+                if (newX >= 0 && newX < this.mapWidth && newY >= 0 &&
+                     newY < this.mapHeight &&
+                     Math.sqrt(i * i + j * j) <= radius &&  // Check if Euclidean distance is within radius
+                     this.grid[newX][newY] != WALL && this.grid[newX][newY] != COLONY) { 
+                    this.grid[newX][newY] = FOOD;
+
+                    this.offScreenCtx.beginPath();
+                    this.offScreenCtx.arc(
+                        this.tileWidth * newX + this.tileWidth / 2, // Center X
+                        this.tileHeight * newY + this.tileHeight / 2, // Center Y
+                        this.tileWidth / 2, // Radius of the circle
+                        0, 
+                        Math.PI * 2
+                    );
+                    this.offScreenCtx.fillStyle = "green";
+                    this.offScreenCtx.fill();
+                }
+            }   
+        }
+        this.draw(canvas); 
+    }
+
+    draw(canvas) {
+        let ctx = canvas.getContext('2d');
+
+        ctx.drawImage(this.offScreenCanvas, 0, 0);
     }
 
     update(canvas) {
