@@ -16,23 +16,7 @@ export class AntWorker {
         this.angle = Math.random() * Math.PI * 2;
     }
     
-    draw(ctx, rotationAngle) {
-      ctx.save();
-      ctx.translate(this.posX, this.posY);
-      ctx.rotate(rotationAngle + Math.PI / 2);
-      if (AntWorker.img.complete) {
-          ctx.drawImage(AntWorker.img, 0, 0, AntWorker.scale, AntWorker.scale);
-      } else {
-          AntWorker.img.onload = () => {
-            ctx.drawImage(AntWorker.img, 0, 0, AntWorker.scale, AntWorker.scale);
-          };
-      }
-      ctx.restore();
-    }
-
-    update(canvas, grid, tileWidth) {
-        let ctx = canvas.getContext('2d');
-
+    move(canvas, grid, tileWidth) {
         this.angle += (Math.random() - 0.5) * 0.1;
         let dx = Math.cos(this.angle) * this.speed;
         let dy = Math.sin(this.angle) * this.speed;
@@ -72,9 +56,28 @@ export class AntWorker {
                     this.posY = canvas.height - buffer; // Ensure it's fully within bounds
                 }
             }
-        }   
-        
-        let rotationAngle = Math.atan2(dy, dx) /*+ Math.PI / 2*/;
+        }
+        return Math.atan2(dy, dx);
+    }
+
+    draw(ctx, rotationAngle) {
+      ctx.save();
+      ctx.translate(this.posX, this.posY);
+      ctx.rotate(rotationAngle + Math.PI / 2);
+      if (AntWorker.img.complete) {
+          ctx.drawImage(AntWorker.img, 0, 0, AntWorker.scale, AntWorker.scale);
+      } else {
+          AntWorker.img.onload = () => {
+            ctx.drawImage(AntWorker.img, 0, 0, AntWorker.scale, AntWorker.scale);
+          };
+      }
+      ctx.restore();
+    }
+
+    update(canvas, grid, tileWidth) {
+        let ctx = canvas.getContext('2d');
+
+        let rotationAngle = this.move(canvas, grid, tileWidth);
 
         this.draw(ctx, rotationAngle);
         }
