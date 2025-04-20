@@ -41,7 +41,9 @@ txtAntsPerColony.addEventListener("change", function(event) {
 
 // Play button listener
 btnPlay.addEventListener("click", function(event) {
-    btnStop.disabled = false;    
+    btnStop.disabled = false;
+    selectedTool = NO_TOOL;
+    canvas.style.cursor = "auto";
     if (event.target.value === "\u25BA Reproducir") {
         event.target.value = "\u275A\u275A Pausar";
         txtAntsPerColony.disabled = true;

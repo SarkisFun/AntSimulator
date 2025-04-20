@@ -14,9 +14,11 @@ export class AntWorker {
         this.speed = Math.random() * (MAX_SEED - MIN_SPEED) + MIN_SPEED;
         this.size = DEFAULT_SIZE;
         this.angle = Math.random() * Math.PI * 2;
+        this.carryingFood = false;
     }
     
-    move(canvas, grid, tileWidth) {
+    // Moves ant and returns rotation angle to draw properly
+    move(canvas, map) {
         this.angle += (Math.random() - 0.5) * 0.1;
         let dx = Math.cos(this.angle) * this.speed;
         let dy = Math.sin(this.angle) * this.speed;
@@ -24,15 +26,9 @@ export class AntWorker {
         let nextPosX = this.posX + dx;
         let nextPosY = this.posY + dy;
 
-        // Calculate the grid cell the ant is moving into
-        let gridX = Math.floor(nextPosX / tileWidth);
-        let gridY = Math.floor(nextPosY / tileWidth);
-
-        const buffer = this.size; // Add a buffer equal to the ant's size
-
         // Check for wall collisions
-        if (gridX >= 0 && gridX < grid.length && gridY >= 0 && gridY < grid[0].length) {
-            if (grid[gridX][gridY] === 1) { // 1 represents WALL
+        if (map.isInGrid(nextPosX, nextPosY)) {
+            if (map.isWall(nextPosX, nextPosY)) {
                 dx *= -1;
                 dy *=-1;
                 this.angle += Math.PI; // Reverse the direction
@@ -43,17 +39,17 @@ export class AntWorker {
                 // Detect and bounce off edges
                 if (this.posX - this.size < 0) {
                     this.angle = Math.PI - this.angle; // Reflect angle horizontally
-                    this.posX = buffer; // Ensure it's fully within bounds
+                    this.posX = this.size; // Ensure it's fully within bounds
                 } else if (this.posX + this.size > canvas.width) {
-                    this.angle = Math.PI - this.angle; // Reflect angle horizontally
-                    this.posX = canvas.width - buffer; // Ensure it's fully within bounds
+                    this.angle = Math.PI - this.angle;
+                    this.posX = canvas.width - this.size;
                 }
                 if (this.posY - this.size < 0) {
-                    this.angle = -this.angle; // Reflect angle vertically
-                    this.posY = buffer; // Ensure it's fully within bounds
+                    this.angle = -this.angle;
+                    this.posY = this.size;
                 } else if (this.posY + this.size > canvas.height) {
-                    this.angle = -this.angle; // Reflect angle vertically
-                    this.posY = canvas.height - buffer; // Ensure it's fully within bounds
+                    this.angle = -this.angle;
+                    this.posY = canvas.height - this.size;
                 }
             }
         }
@@ -74,10 +70,10 @@ export class AntWorker {
       ctx.restore();
     }
 
-    update(canvas, grid, tileWidth) {
+    update(canvas, map) {
         let ctx = canvas.getContext('2d');
 
-        let rotationAngle = this.move(canvas, grid, tileWidth);
+        let rotationAngle = this.move(canvas, map);
 
         this.draw(ctx, rotationAngle);
         }

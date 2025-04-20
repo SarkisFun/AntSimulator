@@ -26,6 +26,23 @@ export class MapGrid {
         }
     }
 
+    getGridCoordinates(x, y) {
+        let coordinates = [];
+        coordinates[0] = Math.floor(x / this.tileWidth);
+        coordinates[1] = Math.floor(y / this.tileHeight);
+        return coordinates;
+    }
+
+    isInGrid(x, y) {
+        let coordinates = this.getGridCoordinates(x, y);
+        return coordinates[0] >= 0 && coordinates[0] < this.grid.length && coordinates[1] >= 0 && coordinates[1] < this.grid[0].length;
+    }
+
+    isWall(x, y) {
+        let coordinates = this.getGridCoordinates(x, y);
+        return this.grid[coordinates[0]][coordinates[1]] === WALL; 
+    }
+
     createColony(canvasX, canvasY) {
         if (this.colonyX != -1) {
             this.grid[this.colonyX][this.colonyY] = EMPTY;

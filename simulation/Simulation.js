@@ -139,7 +139,7 @@ export class Simulation {
         Simulation.ctx.scale(Simulation.scale, Simulation.scale);
         // animation
         this.map.update(Simulation.canvas);
-        this.colony.update(Simulation.canvas, this.map.grid, this.map.tileWidth);
+        this.colony.update(Simulation.canvas, this.map);
 
         Simulation.ctx.restore();
 

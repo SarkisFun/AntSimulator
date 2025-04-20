@@ -40,10 +40,10 @@ export class Colony {
         }       
     }
 
-    update(canvas, grid, tileWidth) {
+    update(canvas, map) {
         this.draw(canvas)
         this.workers.forEach(ant =>{
-            ant.update(canvas, grid, tileWidth);
+            ant.update(canvas, map);
         });
     }
 }
