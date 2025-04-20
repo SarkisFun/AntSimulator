@@ -36,7 +36,6 @@ window.addEventListener("load", () => {
 // Ant number text listener
 txtAntsPerColony.addEventListener("change", function(event) {
     simulation.setAntsPerColony(event.target.value);
-    btnPlay.disabled = !placedColony;
 })
 
 // Play button listener
