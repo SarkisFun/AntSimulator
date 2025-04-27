@@ -43,6 +43,36 @@ export class MapGrid {
         return this.grid[coordinates[0]][coordinates[1]] === WALL; 
     }
 
+    containsFood(x, y, radius) {
+        let coordinates = this.getGridCoordinates(x, y);
+        let result = [];
+
+        for (let i = -radius; i <= radius; i++) {
+            for (let j = -radius; j <= radius; j++) {
+                const newX = coordinates[0] + i;
+                const newY = coordinates[1] + j;
+    
+                // Check if coordinates are within bounds and radius
+                if (newX >= 0 && newX < this.mapWidth && newY >= 0 &&
+                    newY < this.mapHeight &&
+                    Math.sqrt(i * i + j * j) <= radius) { // Check if Euclidean distance is within radius
+                    if (this.grid[newX][newY] === FOOD) {
+                        result[0] = newX;
+                        result[1] = newY;
+                        return result;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    takeFood(foodX, foodY) {
+        this.grid[foodX][foodY] = EMPTY;
+        this.offScreenCtx.clearRect(this.tileWidth * foodX, 
+            this.tileHeight * foodY, this.tileWidth, this.tileHeight);
+    }
+
     createColony(canvasX, canvasY) {
         if (this.colonyX != -1) {
             this.grid[this.colonyX][this.colonyY] = EMPTY;
