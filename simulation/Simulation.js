@@ -37,6 +37,7 @@ export class Simulation {
 
         if (this.status === STOPPED) {
             this.colony.setCoordinates(x, y);
+            this.map.createColony(x,y);
             this.placedColony = true;
             Simulation.ctx.clearRect(0,0,Simulation.canvas.width, Simulation.canvas.height);
             this.map.draw(Simulation.canvas);

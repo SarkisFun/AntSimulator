@@ -86,6 +86,10 @@ export class AntWorker {
         this.carryingFood = true;
     }
 
+    deliverFood() {
+        this.carryingFood = false;
+    }
+
     draw(ctx, rotationAngle) {
         if (this.carryingFood) {
             this.img.src = './img/workerWithFood.png';
@@ -109,11 +113,11 @@ export class AntWorker {
         let ctx = canvas.getContext('2d');
 
         if (!this.carryingFood) { // Ant has no food
-            let detectedFood = map.containsFood(this.posX, this.posY, this.size);
+            let detectedFood = map.containsItem(this.posX, this.posY, this.size, 3); // 3 = FOOD
             if (detectedFood[0]) { // Ant colliding with food
                 this.pickUpFood(map, detectedFood[1], detectedFood[2]);
             } else { // Ant not colliding with food
-                detectedFood = map.containsFood(this.posX, this.posY, this.perceptionRadius);
+                detectedFood = map.containsItem(this.posX, this.posY, this.perceptionRadius, 3); // 3 = FOOD
                 if (detectedFood[0]) { // Ant perceives food
                     let rotationAngle = this.moveTowardsPoint(map, detectedFood[1], detectedFood[2]);
                     this.draw(ctx, rotationAngle);
@@ -123,8 +127,19 @@ export class AntWorker {
                 }       
             }
         } else { // Ant has food
-            let rotationAngle = this.move(canvas, map);
-            this.draw(ctx, rotationAngle);
+            let detectedHome = map.containsItem(this.posX, this.posY, this.size, 2); // 2 = COLONY
+            if (detectedHome[0]) {
+                this.deliverFood();
+            } else {
+                detectedHome = map.containsItem(this.posX, this.posY, this.perceptionRadius, 2); // 2 = COLONY
+                if (detectedHome[0]) {
+                    let rotationAngle = this.moveTowardsPoint(map, detectedHome[1], detectedHome[2]);
+                    this.draw(ctx, rotationAngle);
+                } else {
+                    let rotationAngle = this.move(canvas, map);
+                    this.draw(ctx, rotationAngle);
+                }
+            }
         }
     }
 }

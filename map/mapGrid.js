@@ -47,7 +47,7 @@ export class MapGrid {
         return this.grid[coordinates[0]][coordinates[1]] === WALL; 
     }
 
-    containsFood(x, y, radius) {
+    containsItem(x, y, radius, item) {
         let coordinates = this.getGridCoordinates(x, y);
         let minDistance = Infinity;
         let nearestFood = [false, null, null];
@@ -61,7 +61,7 @@ export class MapGrid {
                 if (newX >= 0 && newX < this.mapWidth && newY >= 0 &&
                     newY < this.mapHeight &&
                     Math.sqrt(i * i + j * j) <= radius) { // Check if Euclidean distance is within radius
-                    if (this.grid[newX][newY] === FOOD) {
+                    if (this.grid[newX][newY] === item) {
                         nearestFood[0] = true;
                         const distance = Math.sqrt(i * i + j * j);
                         if (distance < minDistance) {
@@ -85,8 +85,8 @@ export class MapGrid {
     takeFood(foodX, foodY) {
         let coordinates = this.getGridCoordinates(foodX, foodY);
         this.grid[coordinates[0]][coordinates[1]] = EMPTY;
-        this.offScreenCtx.clearRect(this.tileWidth * foodX, 
-            this.tileHeight * foodY, this.tileWidth, this.tileHeight);
+        this.offScreenCtx.clearRect(this.tileWidth * coordinates[0], 
+            this.tileHeight * coordinates[1], this.tileWidth, this.tileHeight);
     }
 
     createColony(canvasX, canvasY) {
