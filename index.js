@@ -5,6 +5,7 @@ const NO_TOOL = 0;
 const COLONY_TOOL = 1;
 const WALL_TOOL = 2;
 const FOOD_TOOL = 3;
+const ERASER_TOOL = 4;
 
 const canvas = document.getElementById("canvas");
 const txtAntsPerColony = document.getElementById("txtAntsPerColony");
@@ -84,6 +85,7 @@ document.getElementById("btnDrawWall").addEventListener("click", () => {
     }
 })
 
+// Food drawing tool
 document.getElementById("btnDrawFood").addEventListener("click", () => {
     if (selectedTool != FOOD_TOOL) {
         selectedTool = FOOD_TOOL;
@@ -91,6 +93,16 @@ document.getElementById("btnDrawFood").addEventListener("click", () => {
     } else {
         selectedTool = NO_TOOL;
         canvas.style.cursor = "auto";
+    }
+})
+
+// Eraser tool
+document.getElementById("btnEraser").addEventListener("click", () => {
+    if (selectedTool != ERASER_TOOL) {
+        selectedTool = ERASER_TOOL;
+        // CHANGE CURSOR TO PINK CITCLE OR SOMETHING
+    } else {
+        selectedTool = NO_TOOL;
     }
 })
 
@@ -104,6 +116,15 @@ canvas.addEventListener("click", function(event) {
             selectedTool = NO_TOOL;
             canvas.style.cursor = "auto";
             break;
+        case WALL_TOOL:
+            simulation.paintWall(canvas, event.clientX, event.clientY, 15);
+            break;
+        case FOOD_TOOL:
+            simulation.paintFood(canvas, event.clientX, event.clientY, 5);
+            break;
+        case ERASER_TOOL:
+            simulation.eraser(canvas, event.clientX, event.clientY, 5)
+            break;   
     }
 })
 
@@ -113,6 +134,10 @@ canvas.addEventListener("mousedown", () => {
 })
 
 canvas.addEventListener("mouseup", () => {
+    mouseDown = false;
+})
+
+canvas.addEventListener("mouseout", () => {
     mouseDown = false;
 })
 
@@ -127,6 +152,9 @@ canvas.addEventListener("mousemove", function(event) {
                 break;
             case FOOD_TOOL:
                 simulation.paintFood(canvas, event.clientX, event.clientY, 5);
+                break;
+            case ERASER_TOOL:
+                simulation.eraser(canvas, event.clientX, event.clientY, 5)
                 break;
         }
     }

@@ -118,12 +118,8 @@ export class MapGrid {
                     this.grid[newX][newY] = WALL;
 
                     this.offScreenCtx.fillStyle = "grey";
-                    this.offScreenCtx.fillRect(
-                    this.tileWidth * newX,
-                    this.tileHeight * newY,
-                    this.tileWidth,
-                    this.tileHeight
-                );
+                    this.offScreenCtx.fillRect(this.tileWidth * newX,
+                         this.tileHeight * newY, this.tileWidth, this.tileHeight);
                 }
             }   
         }
@@ -163,9 +159,35 @@ export class MapGrid {
         this.draw(canvas); 
     }
 
+    eraser(canvas, mouseX, mouseY, radius) {
+        const rect = canvas.getBoundingClientRect();
+        const x = Math.floor((mouseX - rect.left) / this.tileWidth);
+        const y = Math.floor((mouseY - rect.top) / this.tileHeight);
+
+        for (let i = -radius; i <= radius; i++) {
+            for (let j = -radius; j <= radius; j++) {
+                const newX = x + i;
+                const newY = y + j;
+
+                // Check if coordinates are within bounds and radius
+                if (newX >= 0 && newX < this.mapWidth && newY >= 0 &&
+                    newY < this.mapHeight &&
+                    Math.sqrt(i * i + j * j) <= radius ) {  // Check if Euclidean distance is within radius 
+                    
+                    this.grid[newX][newY] = EMPTY;
+
+                    this.offScreenCtx.clearRect(this.tileWidth * newX,
+                        this.tileHeight * newY, this.tileWidth, this.tileHeight);
+               }
+            }
+        }
+        this.draw(canvas);
+    }
+
     draw(canvas) {
         let ctx = canvas.getContext('2d');
 
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(this.offScreenCanvas, 0, 0);
     }
 

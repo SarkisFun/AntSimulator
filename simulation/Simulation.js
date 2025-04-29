@@ -61,6 +61,12 @@ export class Simulation {
         }
     }
 
+    eraser(canvas, mouseX, mouseY, radius) {
+        if (this.status === STOPPED) {
+            this.map.eraser(canvas, mouseX, mouseY, radius);
+        }
+    }
+
     mouseWheelListener(){
         Simulation.canvas.addEventListener("wheel", (event) => {
             event.preventDefault();
