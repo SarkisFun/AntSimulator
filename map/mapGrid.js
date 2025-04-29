@@ -33,6 +33,10 @@ export class MapGrid {
         return coordinates;
     }
 
+    getRealCoordinates(gridCoordinates) {
+        return [gridCoordinates[0] * this.tileWidth, gridCoordinates[1] * this.tileHeight];
+    }
+
     isInGrid(x, y) {
         let coordinates = this.getGridCoordinates(x, y);
         return coordinates[0] >= 0 && coordinates[0] < this.grid.length && coordinates[1] >= 0 && coordinates[1] < this.grid[0].length;
@@ -45,7 +49,8 @@ export class MapGrid {
 
     containsFood(x, y, radius) {
         let coordinates = this.getGridCoordinates(x, y);
-        let result = [];
+        let minDistance = Infinity;
+        let nearestFood = [false, null, null];
 
         for (let i = -radius; i <= radius; i++) {
             for (let j = -radius; j <= radius; j++) {
@@ -57,18 +62,29 @@ export class MapGrid {
                     newY < this.mapHeight &&
                     Math.sqrt(i * i + j * j) <= radius) { // Check if Euclidean distance is within radius
                     if (this.grid[newX][newY] === FOOD) {
-                        result[0] = newX;
-                        result[1] = newY;
-                        return result;
+                        nearestFood[0] = true;
+                        const distance = Math.sqrt(i * i + j * j);
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                            //nearestFood = [newX, newY];
+                            nearestFood[1] = newX;
+                            nearestFood[2] = newY;
+                        }
                     }
                 }
             }
         }
-        return result;
+        if (nearestFood[0]) {
+            let coordinates = this.getRealCoordinates([nearestFood[1], nearestFood[2]]);
+            nearestFood[1] = coordinates[0];
+            nearestFood[2] = coordinates[1]
+        }
+        return nearestFood;
     }
 
     takeFood(foodX, foodY) {
-        this.grid[foodX][foodY] = EMPTY;
+        let coordinates = this.getGridCoordinates(foodX, foodY);
+        this.grid[coordinates[0]][coordinates[1]] = EMPTY;
         this.offScreenCtx.clearRect(this.tileWidth * foodX, 
             this.tileHeight * foodY, this.tileWidth, this.tileHeight);
     }
