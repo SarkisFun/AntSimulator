@@ -100,7 +100,7 @@ export class MapGrid {
         
 
         this.colony.x = gridCoords[0];
-        this.colonyY = gridCoords[1];
+        this.colony.y = gridCoords[1];
 
         this.grid[this.colony.x][this.colony.y] = COLONY;
         this.colony.setCoordinates(canvasX, canvasY)
