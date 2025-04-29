@@ -6,6 +6,8 @@ export class Colony {
 
     constructor() {
         Colony.img.src = "./img/colony.png";
+        this.x = -1;
+        this.y = -1;
     }
 
     setAntNumber(antNumber) {
@@ -38,6 +40,14 @@ export class Colony {
                 ctx.drawImage(Colony.img, this.x - Colony.scale/2, this.y - Colony.scale/2, Colony.scale, Colony.scale);
             };
         }       
+    }
+
+    drawAnts(canvas) {
+        let ctx = canvas.getContext('2d');
+
+        for (const ant of this.workers) {
+            ant.draw(ctx);
+        }
     }
 
     update(canvas, map) {

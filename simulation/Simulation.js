@@ -1,4 +1,4 @@
-import { Colony } from "../ant/Colony.js";
+
 import { MapGrid } from "../map/mapGrid.js";
 
 // Global
@@ -24,7 +24,7 @@ export class Simulation {
         Simulation.ctx = canvas.getContext('2d');
         this.status = STOPPED;
         this.placedColony = false;
-        this.colony = new Colony();
+        //this.colony = new Colony();
         this.map = new MapGrid(DEFAULT_TILE_SIZE, canvas.width, canvas.height);
 
         this.mouseWheelListener();
@@ -36,18 +36,18 @@ export class Simulation {
         const y = mouseY - rect.top;
 
         if (this.status === STOPPED) {
-            this.colony.setCoordinates(x, y);
+            //this.colony.setCoordinates(x, y);
             this.map.createColony(x,y);
             this.placedColony = true;
             Simulation.ctx.clearRect(0,0,Simulation.canvas.width, Simulation.canvas.height);
             this.map.draw(Simulation.canvas);
-            this.colony.draw(Simulation.canvas);
+            this.map.colony.draw(Simulation.canvas);
         }
     }
 
     setAntsPerColony(antsPerColony) {
         this.antsPerColony = antsPerColony;
-        this.colony.setAntNumber(antsPerColony);
+        this.map.colony.setAntNumber(antsPerColony);
     }
 
     paintWall(canvas, mouseX, mouseY, radius) {
@@ -106,7 +106,7 @@ export class Simulation {
             this.animationLoop();
         } else {
             this.status = STARTED;
-            this.colony.resetAnts();
+            this.map.colony.resetAnts();
 
             this.offsetX = 0;
             this.offsetY = 0;
@@ -123,10 +123,10 @@ export class Simulation {
         if (this.status == PAUSED) {
             this.status = STOPPED;
             this.animationLoop();
-            this.colony.resetAnts();
+            this.map.colony.resetAnts();
         } else {
             this.status = STOPPED;
-            this.colony.resetAnts();
+            this.map.colony.resetAnts();
         }
         
     }
@@ -146,7 +146,7 @@ export class Simulation {
         Simulation.ctx.scale(Simulation.scale, Simulation.scale);
         // animation
         this.map.update(Simulation.canvas);
-        this.colony.update(Simulation.canvas, this.map);
+        this.map.colony.update(Simulation.canvas, this.map);
 
         Simulation.ctx.restore();
 
@@ -155,10 +155,14 @@ export class Simulation {
                 requestAnimationFrame(this.animationLoop.bind(this));
                 break;
             case STOPPED:
-                Simulation.ctx.clearRect(0, 0, canvas.width, canvas.height);               
+                Simulation.ctx.clearRect(0, 0, canvas.width, canvas.height); 
+                this.map.draw(Simulation.canvas);
+                this.map.colony.draw(Simulation.canvas);
+                break;              
             case PAUSED:
                 this.map.draw(Simulation.canvas);
-                this.colony.draw(Simulation.canvas);
+                this.map.colony.draw(Simulation.canvas);
+                this.map.colony.drawAnts(canvas);
                 break;
         }
     }   

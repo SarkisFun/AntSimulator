@@ -62,7 +62,7 @@ export class AntWorker {
             }
         }
 
-        return Math.atan2(dy, dx);
+        this.rotationAngle = Math.atan2(dy, dx);
     }
     
     moveTowardsPoint(map, foodX, foodY) {
@@ -78,7 +78,7 @@ export class AntWorker {
         this.posX += moveX;
         this.posY += moveY;
 
-        return Math.atan2(dy, dx);
+        this.rotationAngle = Math.atan2(dy, dx);
     }
 
     pickUpFood(map, foodX, foodY) {
@@ -90,7 +90,7 @@ export class AntWorker {
         this.carryingFood = false;
     }
 
-    draw(ctx, rotationAngle) {
+    draw(ctx) {
         if (this.carryingFood) {
             this.img.src = './img/workerWithFood.png';
         } else {
@@ -98,7 +98,7 @@ export class AntWorker {
         }
         ctx.save();
         ctx.translate(this.posX, this.posY);
-        ctx.rotate(rotationAngle + Math.PI / 2);
+        ctx.rotate(this.rotationAngle + Math.PI / 2);
         if (this.img.complete) {
             ctx.drawImage(this.img, 0, 0, AntWorker.scale, AntWorker.scale);
         } else {
@@ -119,11 +119,11 @@ export class AntWorker {
             } else { // Ant not colliding with food
                 detectedFood = map.containsItem(this.posX, this.posY, this.perceptionRadius, 3); // 3 = FOOD
                 if (detectedFood[0]) { // Ant perceives food
-                    let rotationAngle = this.moveTowardsPoint(map, detectedFood[1], detectedFood[2]);
-                    this.draw(ctx, rotationAngle);
+                    this.moveTowardsPoint(map, detectedFood[1], detectedFood[2]);
+                    this.draw(ctx);
                 } else { // No food in Ant perception radius
-                    let rotationAngle = this.move(canvas, map);
-                    this.draw(ctx, rotationAngle);
+                    this.move(canvas, map);
+                    this.draw(ctx);
                 }       
             }
         } else { // Ant has food
@@ -133,11 +133,11 @@ export class AntWorker {
             } else {
                 detectedHome = map.containsItem(this.posX, this.posY, this.perceptionRadius, 2); // 2 = COLONY
                 if (detectedHome[0]) {
-                    let rotationAngle = this.moveTowardsPoint(map, detectedHome[1], detectedHome[2]);
-                    this.draw(ctx, rotationAngle);
+                    this.moveTowardsPoint(map, detectedHome[1], detectedHome[2]);
+                    this.draw(ctx);
                 } else {
-                    let rotationAngle = this.move(canvas, map);
-                    this.draw(ctx, rotationAngle);
+                    this.move(canvas, map);
+                    this.draw(ctx);
                 }
             }
         }

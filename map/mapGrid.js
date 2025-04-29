@@ -1,3 +1,5 @@
+import { Colony } from "../ant/Colony.js";
+
 const EMPTY = 0;
 const WALL = 1;
 const COLONY = 2;
@@ -15,8 +17,7 @@ export class MapGrid {
         this.offScreenCanvas.width = width;
         this.offScreenCanvas.height = height;
         this.offScreenCtx = this.offScreenCanvas.getContext('2d');
-        this.colonyX = -1;
-        this.colonyY = -1;
+        this.colony = new Colony();
 
         for (let i = 0; i < this.mapWidth; i++) {
             this.grid[i] = new Array(this.mapHeight);  
@@ -90,14 +91,19 @@ export class MapGrid {
     }
 
     createColony(canvasX, canvasY) {
-        if (this.colonyX != -1) {
-            this.grid[this.colonyX][this.colonyY] = EMPTY;
+        let gridCoords = this.getGridCoordinates(canvasX, canvasY);
+        
+        if (this.colony.x != -1) {
+            this.grid[gridCoords[0]][gridCoords[1]] = EMPTY;
         }
 
-        this.colonyX = Math.floor(canvasX / this.tileWidth);
-        this.colonyY = Math.floor(canvasY / this.tileHeight);
+        
 
-        this.grid[this.colonyX][this.colonyY] = COLONY;
+        this.colony.x = gridCoords[0];
+        this.colonyY = gridCoords[1];
+
+        this.grid[this.colony.x][this.colony.y] = COLONY;
+        this.colony.setCoordinates(canvasX, canvasY)
     }
 
     createWall(canvas, mouseX, mouseY, radius) {
@@ -189,6 +195,9 @@ export class MapGrid {
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(this.offScreenCanvas, 0, 0);
+        if (this.colony.x != -1) {
+            this.colony.draw(canvas);    
+        }
     }
 
     update(canvas) {
