@@ -100,9 +100,10 @@ document.getElementById("btnDrawFood").addEventListener("click", () => {
 document.getElementById("btnEraser").addEventListener("click", () => {
     if (selectedTool != ERASER_TOOL) {
         selectedTool = ERASER_TOOL;
-        // CHANGE CURSOR TO PINK CITCLE OR SOMETHING
+        canvas.style.cursor = "url('img/eraserCursor.png') 21 15,auto";
     } else {
         selectedTool = NO_TOOL;
+        canvas.style.cursor = "auto";
     }
 })
 
