@@ -26,8 +26,8 @@ export class Tile {
     }
 
     drawPheromone(ctx, x, y) {
-        this.pheromoneCenterX = x + Tile.width / 2; // Center X
-        this.pheromoneCenterY = y + Tile.height / 2; // Center Y
+        this.pheromoneCenterX = x;
+        this.pheromoneCenterY = y;
         ctx.beginPath();
         ctx.arc(this.pheromoneCenterX, this.pheromoneCenterY,
             Tile.width * 2, // Radius of the circle
@@ -39,15 +39,17 @@ export class Tile {
     }
 
     erasePheromone(ctx) {
-        ctx.beginPath();
+        ctx.save();
         ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
         ctx.arc(
             this.pheromoneCenterX,
             this.pheromoneCenterY,
-            Tile.width * 2, // Radius of the circle
+            Tile.width * 2 + 1, // Radius of the circle
             0, 
             Math.PI * 2
         );
-        context.fill();
+        ctx.fill();
+        ctx.restore();
     } 
 }

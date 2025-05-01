@@ -71,7 +71,7 @@ export class AntWorker {
         // Add pheromone
         this.pheromoneTimer = (this.pheromoneTimer + 1) % 15;
         if (this.pheromoneTimer === 0) {
-            if (!map.addPheromone(this.posX - AntWorker.scale/2, this.posY - AntWorker.scale/2, TO_HOME)) {
+            if (!map.addPheromone(this.posX, this.posY, TO_HOME)) {
                 this.pheromoneTimer--;
             }
         }

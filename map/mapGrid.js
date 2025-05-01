@@ -108,17 +108,17 @@ export class MapGrid {
         }
     }
 
-    // clearPheromones(canvas) {
-    //     for (let i = 0; i < this.mapWidth; i++) {
-    //         for (let j = 0; j < this.mapHeight; j++) {
-    //             if (this.grid[i][j].content === PHEROMONED) {
-    //                 this.grid[i][j].erasePheromone(this.offScreenCtx, i, j);
-    //                 this.grid[i][j].content = EMPTY;
-    //             }
-    //         }
-    //     }
-    //     this.draw(canvas);
-    // }
+    clearPheromones(canvas) {
+        for (let i = 0; i < this.mapWidth; i++) {
+            for (let j = 0; j < this.mapHeight; j++) {
+                if (this.grid[i][j].content === PHEROMONED) {
+                    this.grid[i][j].erasePheromone(this.offScreenCtx, i, j);
+                    this.grid[i][j].content = EMPTY;
+                }
+            }
+        }
+        this.draw(canvas);
+    }
 
     createColony(canvasX, canvasY) {
         let gridCoords = this.getGridCoordinates(canvasX, canvasY);
