@@ -97,7 +97,28 @@ export class Simulation {
                 this.offsetX = (Simulation.canvas.width / 2) * (1 - Simulation.scale);
                 this.offsetY = (Simulation.canvas.height / 2) * (1 - Simulation.scale);
             }
+
+            this.redrawCanvas();
         });
+    }
+
+    redrawCanvas() {
+        Simulation.ctx.clearRect(0, 0, Simulation.canvas.width, Simulation.canvas.height);
+    
+        Simulation.ctx.save();
+        // Apply zoom and translation
+        Simulation.ctx.translate(this.offsetX, this.offsetY);
+        Simulation.ctx.scale(Simulation.scale, Simulation.scale);
+    
+        // Redraw map and colony
+        this.map.draw(Simulation.canvas);
+        this.map.colony.draw(Simulation.canvas);
+    
+        if (this.status === PAUSED) {
+            this.map.colony.drawAnts(Simulation.canvas);
+        }
+    
+        Simulation.ctx.restore();
     }
 
     start() {
