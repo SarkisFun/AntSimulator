@@ -207,25 +207,24 @@ export class Simulation {
         this.lastFrameTime = now;
         this.frameCounter++;
 
-        // Paint frame
-        Simulation.ctx.clearRect(0, 0, Simulation.canvas.width, Simulation.canvas.height);
-        
-        Simulation.ctx.save();
-        // zoom
-        Simulation.ctx.translate(this.offsetX, this.offsetY);
-        Simulation.ctx.scale(Simulation.scale, Simulation.scale);
-        // animation
-        this.map.update(Simulation.canvas);
-        this.map.colony.update(Simulation.canvas, this.map);
-
-        Simulation.ctx.restore();
-
-        if (this.showStats) {
-            this.drawStats();   
-        }
-
         switch (this.status) {
             case STARTED:
+                // Paint frame
+                Simulation.ctx.clearRect(0, 0, Simulation.canvas.width, Simulation.canvas.height);
+                
+                Simulation.ctx.save();
+                // zoom
+                Simulation.ctx.translate(this.offsetX, this.offsetY);
+                Simulation.ctx.scale(Simulation.scale, Simulation.scale);
+                // animation
+                this.map.update(Simulation.canvas);
+                this.map.colony.update(Simulation.canvas, this.map);
+
+                Simulation.ctx.restore();
+
+                if (this.showStats) {
+                    this.drawStats();   
+                }
                 requestAnimationFrame(this.animationLoop.bind(this));
                 break;
             case STOPPED:

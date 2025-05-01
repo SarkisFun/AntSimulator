@@ -68,13 +68,7 @@ export class AntWorker {
 
         this.rotationAngle = Math.atan2(dy, dx);
 
-        // Add pheromone
-        this.pheromoneTimer = (this.pheromoneTimer + 1) % 15;
-        if (this.pheromoneTimer === 0) {
-            if (!map.addPheromone(this.posX, this.posY, TO_HOME)) {
-                this.pheromoneTimer--;
-            }
-        }
+        this.leavePheromone(map);
     }
     
     moveTowardsPoint(map, foodX, foodY) {
@@ -92,7 +86,16 @@ export class AntWorker {
 
         this.rotationAngle = Math.atan2(dy, dx);
 
-        this.pheromoneTimer++;
+        this.leavePheromone(map);
+    }
+
+    leavePheromone(map) {
+        this.pheromoneTimer = (this.pheromoneTimer + 1) % 15;
+        if (this.pheromoneTimer === 0) {
+            if (!map.addPheromone(this.posX, this.posY, TO_HOME)) {
+                this.pheromoneTimer--;
+            }
+        }
     }
 
     pickUpFood(map, foodX, foodY) {

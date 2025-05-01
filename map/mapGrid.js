@@ -8,9 +8,6 @@ const COLONY = 2;
 const FOOD = 3;
 const PHEROMONED = 4;
 
-// Pheromone types
-const TO_HOME = 0;
-
 export class MapGrid {
 
     constructor(tileSize, width, height) {
