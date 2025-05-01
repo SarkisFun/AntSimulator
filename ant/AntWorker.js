@@ -69,9 +69,11 @@ export class AntWorker {
         this.rotationAngle = Math.atan2(dy, dx);
 
         // Add pheromone
-        this.pheromoneTimer++ % 15;
+        this.pheromoneTimer = (this.pheromoneTimer + 1) % 15;
         if (this.pheromoneTimer === 0) {
-            map.addPheromone(this.posX, this.posY, TO_HOME);
+            if (!map.addPheromone(this.posX - AntWorker.scale/2, this.posY - AntWorker.scale/2, TO_HOME)) {
+                this.pheromoneTimer--;
+            }
         }
     }
     

@@ -232,6 +232,7 @@ export class Simulation {
                 Simulation.ctx.clearRect(0, 0, canvas.width, canvas.height); 
                 this.frameCounter = 0;
                 this.fps = 0;
+                //this.map.clearPheromones(Simulation.canvas);
                 this.map.draw(Simulation.canvas);
                 this.map.colony.draw(Simulation.canvas);
                 if (this.showStats) {

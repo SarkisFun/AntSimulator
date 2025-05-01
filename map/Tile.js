@@ -18,23 +18,36 @@ export class Tile {
         //this.pheromoneIntensity = 0;
     }
 
-    addPheromone(ctx, type) {
+    addPheromone(ctx, x, y, type) {
         this.content = PHEROMONED;
         this.pheromoneType = type;
         this.pheromoneIntensity = 100;
-        this.drawPheromone(ctx)
+        this.drawPheromone(ctx, x, y)
     }
 
-    drawPheromone(ctx) {
+    drawPheromone(ctx, x, y) {
+        this.pheromoneCenterX = x + Tile.width / 2; // Center X
+        this.pheromoneCenterY = y + Tile.height / 2; // Center Y
         ctx.beginPath();
-                    ctx.arc(
-                        Tile.width * newX + Tile.width / 2, // Center X
-                        Tile.height * newY + Tile.height / 2, // Center Y
-                        Tile.width * 2, // Radius of the circle
-                        0, 
-                        Math.PI * 2
-                    );
-                    ctx.fillStyle = "blue";
-                    ctx.fill();
+        ctx.arc(this.pheromoneCenterX, this.pheromoneCenterY,
+            Tile.width * 2, // Radius of the circle
+            0, 
+            Math.PI * 2
+        );
+        ctx.fillStyle = "blue";
+        ctx.fill();
     }
+
+    erasePheromone(ctx) {
+        ctx.beginPath();
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.arc(
+            this.pheromoneCenterX,
+            this.pheromoneCenterY,
+            Tile.width * 2, // Radius of the circle
+            0, 
+            Math.PI * 2
+        );
+        context.fill();
+    } 
 }

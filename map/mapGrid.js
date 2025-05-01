@@ -6,6 +6,7 @@ const EMPTY = 0;
 const WALL = 1;
 const COLONY = 2;
 const FOOD = 3;
+const PHEROMONED = 4;
 
 // Pheromone types
 const TO_HOME = 0;
@@ -98,13 +99,26 @@ export class MapGrid {
 
     addPheromone(x, y, type) {
         let coordinates = this.getGridCoordinates(x, y);
-        if(this.grid[coordinates[0]][coordinates[1]].content == EMPTY) {
-            this.grid[coordinates[0]][coordinates[1]].addPheromone(this.offScreenCtx, type);
+        if(this.grid[coordinates[0]][coordinates[1]].content === EMPTY) {
+            this.grid[coordinates[0]][coordinates[1]].addPheromone(this.offScreenCtx, x, y, type);
+            this.draw(canvas);
             return true;
         } else {
             return false;
         }
     }
+
+    // clearPheromones(canvas) {
+    //     for (let i = 0; i < this.mapWidth; i++) {
+    //         for (let j = 0; j < this.mapHeight; j++) {
+    //             if (this.grid[i][j].content === PHEROMONED) {
+    //                 this.grid[i][j].erasePheromone(this.offScreenCtx, i, j);
+    //                 this.grid[i][j].content = EMPTY;
+    //             }
+    //         }
+    //     }
+    //     this.draw(canvas);
+    // }
 
     createColony(canvasX, canvasY) {
         let gridCoords = this.getGridCoordinates(canvasX, canvasY);
