@@ -1,3 +1,5 @@
+const PHEROMONE_DECAY_RATE = 0.2;
+
 // Tile content types
 const EMPTY = 0;
 const WALL = 1;
@@ -34,8 +36,31 @@ export class Tile {
             0, 
             Math.PI * 2
         );
-        ctx.fillStyle = "blue";
+        ctx.fillStyle = "rgba(0, 0, 255)";
         ctx.fill();
+    }
+
+    decayPheromone(ctx) {
+        this.pheromoneIntensity -= PHEROMONE_DECAY_RATE;
+        if (this.pheromoneIntensity <= 0) {
+            this.erasePheromone(ctx);
+            this.content = EMPTY;
+        } else {
+            this.erasePheromone(ctx);
+            const alpha = this.pheromoneIntensity / 100; // Calculate transparency
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(
+                this.pheromoneCenterX,
+                this.pheromoneCenterY,
+                Tile.width * 2, // Radius of the circle
+                0,
+                Math.PI * 2
+            );
+            ctx.fillStyle = `rgba(0, 0, 255, ${alpha})`; // Blue color with dynamic transparency
+            ctx.fill();
+            ctx.restore();
+            }
     }
 
     erasePheromone(ctx) {

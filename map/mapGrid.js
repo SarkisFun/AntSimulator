@@ -229,6 +229,16 @@ export class MapGrid {
         this.draw(canvas);
     }
 
+    decayPheromones() {
+        for (let i = 0; i < this.mapWidth; i++) {
+            for (let j = 0; j < this.mapHeight; j++) {
+                if (this.grid[i][j].content === PHEROMONED) {
+                    this.grid[i][j].decayPheromone(this.offScreenCtx);
+                }
+            }
+        }
+    }
+
     draw(canvas) {
         let ctx = canvas.getContext('2d');
 
@@ -240,6 +250,7 @@ export class MapGrid {
     }
 
     update(canvas) {
+        this.decayPheromones();
         this.draw(canvas);
     }
 }
