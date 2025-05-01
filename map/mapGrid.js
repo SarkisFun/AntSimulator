@@ -1,15 +1,20 @@
 import { Colony } from "../ant/Colony.js";
+import { Tile } from "./Tile.js";
 
+// Tile content types
 const EMPTY = 0;
 const WALL = 1;
 const COLONY = 2;
 const FOOD = 3;
 
+// Pheromone types
+const TO_HOME = 0;
+
 export class MapGrid {
 
     constructor(tileSize, width, height) {
-        this.tileWidth = tileSize;
-        this.tileHeight = tileSize;
+        Tile.width = tileSize;
+        Tile.height = tileSize;
         this.mapWidth = Math.floor(width / tileSize);
         this.mapHeight = Math.floor(height / tileSize);
         this.grid = new Array(this.mapWidth);
@@ -23,24 +28,20 @@ export class MapGrid {
         for (let i = 0; i < this.mapWidth; i++) {
             this.grid[i] = new Array(this.mapHeight);  
             for (let j = 0; j < this.mapHeight; j++) {
-                this.grid[i][j] = {
-                    content: EMPTY,
-                    pheromoneType: null,
-                    pheromoneIntensity:0
-                };
+                this.grid[i][j] = new Tile();
             }   
         }
     }
 
     getGridCoordinates(x, y) {
-        let coordinates = [];
-        coordinates[0] = Math.floor(x / this.tileWidth);
-        coordinates[1] = Math.floor(y / this.tileHeight);
+        let coordinates = []; // LAST ONE
+        coordinates[0] = Math.floor(x / Tile.width);
+        coordinates[1] = Math.floor(y / Tile.height);
         return coordinates;
     }
 
     getRealCoordinates(gridCoordinates) {
-        return [gridCoordinates[0] * this.tileWidth, gridCoordinates[1] * this.tileHeight];
+        return [gridCoordinates[0] * Tile.width, gridCoordinates[1] * Tile.height];
     }
 
     isInGrid(x, y) {
@@ -91,8 +92,8 @@ export class MapGrid {
     takeFood(foodX, foodY) {
         let coordinates = this.getGridCoordinates(foodX, foodY);
         this.grid[coordinates[0]][coordinates[1]].content = EMPTY;
-        this.offScreenCtx.clearRect(this.tileWidth * coordinates[0], 
-            this.tileHeight * coordinates[1], this.tileWidth, this.tileHeight);
+        this.offScreenCtx.clearRect(Tile.width * coordinates[0], 
+            Tile.height * coordinates[1], Tile.width, Tile.height);
     }
 
     createColony(canvasX, canvasY) {
@@ -113,8 +114,8 @@ export class MapGrid {
 
     createWall(canvas, mouseX, mouseY, radius) {
         const rect = canvas.getBoundingClientRect();
-        const x = Math.floor((mouseX - rect.left) / this.tileWidth);
-        const y = Math.floor((mouseY - rect.top) / this.tileHeight);
+        const x = Math.floor((mouseX - rect.left) / Tile.width);
+        const y = Math.floor((mouseY - rect.top) / Tile.height);
 
         for (let i = -radius; i <= radius; i++) {
             for (let j = -radius; j <= radius; j++) {
@@ -132,8 +133,8 @@ export class MapGrid {
                     this.grid[newX][newY].content = WALL;
 
                     this.offScreenCtx.fillStyle = "grey";
-                    this.offScreenCtx.fillRect(this.tileWidth * newX,
-                         this.tileHeight * newY, this.tileWidth, this.tileHeight);
+                    this.offScreenCtx.fillRect(Tile.width * newX,
+                         Tile.height * newY, Tile.width, Tile.height);
                 }
             }   
         }
@@ -142,8 +143,8 @@ export class MapGrid {
 
     createFood(canvas, mouseX, mouseY, radius) {
         const rect = canvas.getBoundingClientRect();
-        const x = Math.floor((mouseX - rect.left) / this.tileWidth);
-        const y = Math.floor((mouseY - rect.top) / this.tileHeight);
+        const x = Math.floor((mouseX - rect.left) / Tile.width);
+        const y = Math.floor((mouseY - rect.top) / Tile.height);
 
         for (let i = -radius; i <= radius; i++) {
             for (let j = -radius; j <= radius; j++) {
@@ -161,9 +162,9 @@ export class MapGrid {
 
                     this.offScreenCtx.beginPath();
                     this.offScreenCtx.arc(
-                        this.tileWidth * newX + this.tileWidth / 2, // Center X
-                        this.tileHeight * newY + this.tileHeight / 2, // Center Y
-                        this.tileWidth / 2, // Radius of the circle
+                        Tile.width * newX + Tile.width / 2, // Center X
+                        Tile.height * newY + Tile.height / 2, // Center Y
+                        Tile.width / 2, // Radius of the circle
                         0, 
                         Math.PI * 2
                     );
@@ -177,8 +178,8 @@ export class MapGrid {
 
     eraser(canvas, mouseX, mouseY, radius) {
         const rect = canvas.getBoundingClientRect();
-        const x = Math.floor((mouseX - rect.left) / this.tileWidth);
-        const y = Math.floor((mouseY - rect.top) / this.tileHeight);
+        const x = Math.floor((mouseX - rect.left) / Tile.width);
+        const y = Math.floor((mouseY - rect.top) / Tile.height);
 
         for (let i = -radius; i <= radius; i++) {
             for (let j = -radius; j <= radius; j++) {
@@ -196,8 +197,8 @@ export class MapGrid {
                     }
                     this.grid[newX][newY].content = EMPTY;
 
-                    this.offScreenCtx.clearRect(this.tileWidth * newX,
-                        this.tileHeight * newY, this.tileWidth, this.tileHeight);
+                    this.offScreenCtx.clearRect(Tile.width * newX,
+                        Tile.height * newY, Tile.width, Tile.height);
                }
             }
         }
