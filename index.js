@@ -32,12 +32,12 @@ window.addEventListener("load", () => {
     placedColony = false;
 
     simulation.setAntsPerColony(txtAntsPerColony.value);
-})
+});
 
 // Ant number text listener
 txtAntsPerColony.addEventListener("change", function(event) {
     simulation.setAntsPerColony(event.target.value);
-})
+});
 
 // Play button listener
 btnPlay.addEventListener("click", function(event) {
@@ -61,7 +61,15 @@ btnStop.addEventListener("click", function(event) {
     txtAntsPerColony.disabled = false;
     placedColony = false;
     btnPlay.value = "\u25BA Reproducir";
-})
+});
+
+document.getElementById("cbEstadisticas").addEventListener("click", function(event) {
+    if (event.target.checked) {
+        simulation.showStats = true;
+    } else {
+        simulation.showStats = false;
+    }
+});
 
 // Colony drawing tool
 document.getElementById("btnDrawColony").addEventListener("click", () => {
@@ -72,7 +80,7 @@ document.getElementById("btnDrawColony").addEventListener("click", () => {
         selectedTool = NO_TOOL;
         canvas.style.cursor = "auto";
     }
-})
+});
 
 // Wall drawing tool
 document.getElementById("btnDrawWall").addEventListener("click", () => {
@@ -83,7 +91,7 @@ document.getElementById("btnDrawWall").addEventListener("click", () => {
         selectedTool = NO_TOOL;
         canvas.style.cursor = "auto";
     }
-})
+});
 
 // Food drawing tool
 document.getElementById("btnDrawFood").addEventListener("click", () => {
@@ -94,7 +102,7 @@ document.getElementById("btnDrawFood").addEventListener("click", () => {
         selectedTool = NO_TOOL;
         canvas.style.cursor = "auto";
     }
-})
+});
 
 // Eraser tool
 document.getElementById("btnEraser").addEventListener("click", () => {
@@ -105,7 +113,7 @@ document.getElementById("btnEraser").addEventListener("click", () => {
         selectedTool = NO_TOOL;
         canvas.style.cursor = "auto";
     }
-})
+});
 
 // Draw on canvas listener
 canvas.addEventListener("click", function(event) {
@@ -127,20 +135,20 @@ canvas.addEventListener("click", function(event) {
             simulation.eraser(canvas, event.clientX, event.clientY, 5)
             break;   
     }
-})
+});
 
 // Draw on canvas listeners (mouse hold)
 canvas.addEventListener("mousedown", () => {
     mouseDown = true;
-})
+});
 
 canvas.addEventListener("mouseup", () => {
     mouseDown = false;
-})
+});
 
 canvas.addEventListener("mouseout", () => {
     mouseDown = false;
-})
+});
 
 canvas.addEventListener("mousemove", function(event) {
     if (selectedTool === WALL_TOOL && mouseDown) {
@@ -159,5 +167,5 @@ canvas.addEventListener("mousemove", function(event) {
                 break;
         }
     }
-})
+});
 ///////////////////////////////////////

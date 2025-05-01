@@ -29,7 +29,7 @@ main {
 }
 
 .menuTitle {
-    padding: 20px 0 20px 0;
+    padding: 15px 0 15px 0;
     margin: 0;
 }
 
@@ -103,6 +103,13 @@ main {
 
 #btnEraser {
     background-image: url(img/eraser_menu.png);
+}
+
+#smallLI {
+    display: flex;
+    flex-direction: row;
+    font-size: 14px;
+    justify-content: center;
 }
 
 #canvas {

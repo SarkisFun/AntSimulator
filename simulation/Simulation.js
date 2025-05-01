@@ -24,7 +24,7 @@ export class Simulation {
         Simulation.ctx = canvas.getContext('2d');
         this.status = STOPPED;
         this.placedColony = false;
-        //this.colony = new Colony();
+        this.showStats = true;
         this.map = new MapGrid(DEFAULT_TILE_SIZE, canvas.width, canvas.height);
 
         this.mouseWheelListener();
@@ -36,7 +36,6 @@ export class Simulation {
         const y = mouseY - rect.top;
 
         if (this.status === STOPPED) {
-            //this.colony.setCoordinates(x, y);
             this.map.createColony(x,y);
             this.placedColony = true;
             Simulation.ctx.clearRect(0,0,Simulation.canvas.width, Simulation.canvas.height);
@@ -164,7 +163,7 @@ export class Simulation {
         Simulation.ctx.fillRect(0, 0, 200, 80);
         Simulation.ctx.fillStyle = "white";
         Simulation.ctx.font = "bold 16px Arial";
-        Simulation.ctx.fillText("Estadisticas:", 51, 20);
+        Simulation.ctx.fillText("Estadísticas:", 51, 20);
         Simulation.ctx.font = "16px Arial";
         Simulation.ctx.fillText(`FPS: ${this.fps}`, 10, 50);
         Simulation.ctx.fillStyle = "green";
@@ -192,7 +191,9 @@ export class Simulation {
 
         Simulation.ctx.restore();
 
-        this.drawStats();
+        if (this.showStats) {
+            this.drawStats();   
+        }
 
         switch (this.status) {
             case STARTED:
@@ -202,13 +203,17 @@ export class Simulation {
                 Simulation.ctx.clearRect(0, 0, canvas.width, canvas.height); 
                 this.map.draw(Simulation.canvas);
                 this.map.colony.draw(Simulation.canvas);
-                this.drawStats();
+                if (this.showStats) {
+                    this.drawStats();   
+                }
                 break;              
             case PAUSED:
                 this.map.draw(Simulation.canvas);
                 this.map.colony.draw(Simulation.canvas);
                 this.map.colony.drawAnts(canvas);
-                this.drawStats();
+                if (this.showStats) {
+                    this.drawStats();   
+                }
                 break;
         }
     }   
