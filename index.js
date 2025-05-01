@@ -64,6 +64,7 @@ btnStop.addEventListener("click", function(event) {
     btnPlay.value = "\u25BA Reproducir";
 });
 
+// Stats checkbox listener
 document.getElementById("cbEstadisticas").addEventListener("click", function(event) {
     if (event.target.checked) {
         simulation.showStats = true;
@@ -140,7 +141,7 @@ canvas.addEventListener("click", function(event) {
     }
 });
 
-// Draw on canvas listeners (mouse hold)
+////// Draw on canvas listeners (mouse hold)
 canvas.addEventListener("mousedown", () => {
     mouseDown = true;
 });
@@ -171,4 +172,4 @@ canvas.addEventListener("mousemove", function(event) {
         }
     }
 });
-///////////////////////////////////////
+////////////////////////////////////////////

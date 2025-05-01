@@ -32,7 +32,7 @@ export class MapGrid {
     }
 
     getGridCoordinates(x, y) {
-        let coordinates = []; // LAST ONE
+        let coordinates = [];
         coordinates[0] = Math.floor(x / Tile.width);
         coordinates[1] = Math.floor(y / Tile.height);
         return coordinates;
@@ -71,7 +71,6 @@ export class MapGrid {
                         const distance = Math.sqrt(i * i + j * j);
                         if (distance < minDistance) {
                             minDistance = distance;
-                            //nearestFood = [newX, newY];
                             nearestFood[1] = newX;
                             nearestFood[2] = newY;
                         }

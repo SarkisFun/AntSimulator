@@ -134,6 +134,10 @@ export class Simulation {
         if (this.status === PAUSED) {
             this.map.colony.drawAnts(Simulation.canvas);
         }
+
+        if (this.showStats) {
+            this.drawStats();   
+        }
     
         Simulation.ctx.restore();
     }
