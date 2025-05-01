@@ -158,7 +158,24 @@ export class Simulation {
         }
     }
 
+    drawFramerate() {
+        Simulation.ctx.save();
+        Simulation.ctx.font = "16px Arial";
+        Simulation.canvas.fillStyle = "black";
+        Simulation.ctx.fillRect(0, 0, 80, 30);
+        Simulation.ctx.fillStyle = "white";
+        Simulation.ctx.fillText(`FPS: ${this.fps}`, 10, 20);
+        Simulation.ctx.restore();
+    }
+
     animationLoop() {
+        // Calculate framerate
+        const now = performance.now();
+        if (!this.lastFrameTime) this.lastFrameTime = now;
+        const delta = now - this.lastFrameTime;
+        this.fps = Math.round(1000 / delta);
+        this.lastFrameTime = now;
+    
         Simulation.ctx.clearRect(0, 0, Simulation.canvas.width, Simulation.canvas.height); // Clear canvas once per frame
         
         Simulation.ctx.save();
@@ -171,6 +188,8 @@ export class Simulation {
 
         Simulation.ctx.restore();
 
+        this.drawFramerate();
+
         switch (this.status) {
             case STARTED:
                 requestAnimationFrame(this.animationLoop.bind(this));
@@ -179,11 +198,13 @@ export class Simulation {
                 Simulation.ctx.clearRect(0, 0, canvas.width, canvas.height); 
                 this.map.draw(Simulation.canvas);
                 this.map.colony.draw(Simulation.canvas);
+                this.drawFramerate();
                 break;              
             case PAUSED:
                 this.map.draw(Simulation.canvas);
                 this.map.colony.draw(Simulation.canvas);
                 this.map.colony.drawAnts(canvas);
+                this.drawFramerate();
                 break;
         }
     }   
