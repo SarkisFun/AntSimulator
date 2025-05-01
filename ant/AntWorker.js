@@ -7,6 +7,9 @@ const DEFAULT_PERCEPTION_RADIUS = 20;
 const SCOUTING = 0;
 const GOING_HOME = 1;
 
+// Pheromone types
+const TO_HOME = 0;
+
 export class AntWorker {
     //static img;
     static scale = 10; // TODO scale should depend of size
@@ -21,6 +24,7 @@ export class AntWorker {
         this.angle = Math.random() * Math.PI * 2;
         this.carryingFood = false;
         this.perceptionRadius = DEFAULT_PERCEPTION_RADIUS;
+        this.pheromoneTimer = 1;
         this.status = SCOUTING;
     }
     
@@ -63,6 +67,12 @@ export class AntWorker {
         }
 
         this.rotationAngle = Math.atan2(dy, dx);
+
+        // Add pheromone
+        this.pheromoneTimer++ % 15;
+        if (this.pheromoneTimer === 0) {
+            map.addPheromone(this.posX, this.posY, TO_HOME);
+        }
     }
     
     moveTowardsPoint(map, foodX, foodY) {
@@ -79,6 +89,8 @@ export class AntWorker {
         this.posY += moveY;
 
         this.rotationAngle = Math.atan2(dy, dx);
+
+        this.pheromoneTimer++;
     }
 
     pickUpFood(map, foodX, foodY) {

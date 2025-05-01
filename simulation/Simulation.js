@@ -5,6 +5,10 @@ import { MapGrid } from "../map/mapGrid.js";
 const ZOOM_SCALE_FACTOR = 1.1;
 const MAX_ZOOM = 5;
 const DEFAULT_TILE_SIZE = 3;
+const STATS_WIDTH = 200;
+const STATS_HEIGHT = 100;
+const STATS_POS_X = 5;
+const STATS_POS_Y = 5;
 
 // Statuses
 const STOPPED = 0;
@@ -26,8 +30,15 @@ export class Simulation {
         this.placedColony = false;
         this.showStats = true;
         this.map = new MapGrid(DEFAULT_TILE_SIZE, canvas.width, canvas.height);
+        this.frameCounter = 0;
+        this.fps = 0;
 
         this.mouseWheelListener();
+    }
+
+    setAntsPerColony(antsPerColony) {
+            this.antsPerColony = antsPerColony;
+            this.map.colony.setAntNumber(antsPerColony);
     }
 
     setColony(mouseX, mouseY) {
@@ -41,23 +52,30 @@ export class Simulation {
             Simulation.ctx.clearRect(0,0,Simulation.canvas.width, Simulation.canvas.height);
             this.map.draw(Simulation.canvas);
             this.map.colony.draw(Simulation.canvas);
-        }
-    }
 
-    setAntsPerColony(antsPerColony) {
-        this.antsPerColony = antsPerColony;
-        this.map.colony.setAntNumber(antsPerColony);
+            if (this.showStats) {
+                this.drawStats();   
+            }
+        }
     }
 
     paintWall(canvas, mouseX, mouseY, radius) {
         if (this.status === STOPPED) {
             this.map.createWall(canvas, mouseX, mouseY, radius);
+            
+            if (this.showStats) {
+                this.drawStats();   
+            }
         }
     }
 
     paintFood(canvas, mouseX, mouseY, radius) {
         if (this.status === STOPPED) {
             this.map.createFood(canvas, mouseX, mouseY, radius);
+
+            if (this.showStats) {
+                this.drawStats();   
+            }
         }
     }
 
@@ -160,14 +178,23 @@ export class Simulation {
     drawStats() {
         Simulation.ctx.save();
         Simulation.canvas.fillStyle = "black";
-        Simulation.ctx.fillRect(0, 0, 200, 80);
+        Simulation.ctx.fillRect(STATS_POS_X, STATS_POS_Y, STATS_WIDTH, STATS_HEIGHT);
         Simulation.ctx.fillStyle = "white";
         Simulation.ctx.font = "bold 16px Arial";
-        Simulation.ctx.fillText("Estadísticas:", 51, 20);
+        Simulation.ctx.fillText("Estadísticas:", 51 + STATS_POS_X, 20 + STATS_POS_Y);
         Simulation.ctx.font = "16px Arial";
-        Simulation.ctx.fillText(`FPS: ${this.fps}`, 10, 50);
+        Simulation.ctx.fillText(`FPS: ${this.fps}`, 10 + STATS_POS_X, 50 + STATS_POS_Y);
+        Simulation.ctx.fillText(`Frame #: ${this.frameCounter}`, 10 + STATS_POS_X,
+             70 + STATS_POS_Y);
         Simulation.ctx.fillStyle = "green";
-        Simulation.ctx.fillText(`Comida disponible: ${this.map.foodQuantity}`, 10, 70);
+        Simulation.ctx.fillText(`Comida disponible: ${this.map.foodQuantity}`,
+             10 + STATS_POS_X, 90 + STATS_POS_Y);
+        Simulation.ctx.restore();
+    }
+
+    eraseStats() {
+        Simulation.ctx.save();
+        Simulation.ctx.clearRect(0, 0, STATS_WIDTH, STATS_HEIGHT);
         Simulation.ctx.restore();
     }
 
@@ -178,8 +205,10 @@ export class Simulation {
         const delta = now - this.lastFrameTime;
         this.fps = Math.round(1000 / delta);
         this.lastFrameTime = now;
-    
-        Simulation.ctx.clearRect(0, 0, Simulation.canvas.width, Simulation.canvas.height); // Clear canvas once per frame
+        this.frameCounter++;
+
+        // Paint frame
+        Simulation.ctx.clearRect(0, 0, Simulation.canvas.width, Simulation.canvas.height);
         
         Simulation.ctx.save();
         // zoom
@@ -201,6 +230,8 @@ export class Simulation {
                 break;
             case STOPPED:
                 Simulation.ctx.clearRect(0, 0, canvas.width, canvas.height); 
+                this.frameCounter = 0;
+                this.fps = 0;
                 this.map.draw(Simulation.canvas);
                 this.map.colony.draw(Simulation.canvas);
                 if (this.showStats) {

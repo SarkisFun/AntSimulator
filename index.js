@@ -32,6 +32,7 @@ window.addEventListener("load", () => {
     placedColony = false;
 
     simulation.setAntsPerColony(txtAntsPerColony.value);
+    simulation.drawStats();
 });
 
 // Ant number text listener
@@ -66,8 +67,10 @@ btnStop.addEventListener("click", function(event) {
 document.getElementById("cbEstadisticas").addEventListener("click", function(event) {
     if (event.target.checked) {
         simulation.showStats = true;
+        simulation.drawStats();
     } else {
         simulation.showStats = false;
+        simulation.eraseStats();
     }
 });
 

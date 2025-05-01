@@ -96,6 +96,16 @@ export class MapGrid {
             Tile.height * coordinates[1], Tile.width, Tile.height);
     }
 
+    addPheromone(x, y, type) {
+        let coordinates = this.getGridCoordinates(x, y);
+        if(this.grid[coordinates[0]][coordinates[1]].content == EMPTY) {
+            this.grid[coordinates[0]][coordinates[1]].addPheromone(this.offScreenCtx, type);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     createColony(canvasX, canvasY) {
         let gridCoords = this.getGridCoordinates(canvasX, canvasY);
         
