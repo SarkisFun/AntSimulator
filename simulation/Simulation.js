@@ -158,13 +158,17 @@ export class Simulation {
         }
     }
 
-    drawFramerate() {
+    drawStats() {
         Simulation.ctx.save();
-        Simulation.ctx.font = "16px Arial";
         Simulation.canvas.fillStyle = "black";
-        Simulation.ctx.fillRect(0, 0, 80, 30);
+        Simulation.ctx.fillRect(0, 0, 200, 80);
         Simulation.ctx.fillStyle = "white";
-        Simulation.ctx.fillText(`FPS: ${this.fps}`, 10, 20);
+        Simulation.ctx.font = "bold 16px Arial";
+        Simulation.ctx.fillText("Estadisticas:", 51, 20);
+        Simulation.ctx.font = "16px Arial";
+        Simulation.ctx.fillText(`FPS: ${this.fps}`, 10, 50);
+        Simulation.ctx.fillStyle = "green";
+        Simulation.ctx.fillText(`Comida disponible: ${this.map.foodQuantity}`, 10, 70);
         Simulation.ctx.restore();
     }
 
@@ -188,7 +192,7 @@ export class Simulation {
 
         Simulation.ctx.restore();
 
-        this.drawFramerate();
+        this.drawStats();
 
         switch (this.status) {
             case STARTED:
@@ -198,13 +202,13 @@ export class Simulation {
                 Simulation.ctx.clearRect(0, 0, canvas.width, canvas.height); 
                 this.map.draw(Simulation.canvas);
                 this.map.colony.draw(Simulation.canvas);
-                this.drawFramerate();
+                this.drawStats();
                 break;              
             case PAUSED:
                 this.map.draw(Simulation.canvas);
                 this.map.colony.draw(Simulation.canvas);
                 this.map.colony.drawAnts(canvas);
-                this.drawFramerate();
+                this.drawStats();
                 break;
         }
     }   

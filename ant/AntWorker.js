@@ -86,8 +86,9 @@ export class AntWorker {
         this.carryingFood = true;
     }
 
-    deliverFood() {
+    deliverFood(map) {
         this.carryingFood = false;
+        map.foodQuantity--;
     }
 
     draw(ctx) {
@@ -129,7 +130,7 @@ export class AntWorker {
         } else { // Ant has food
             let detectedHome = map.containsItem(this.posX, this.posY, this.size, 2); // 2 = COLONY
             if (detectedHome[0]) {
-                this.deliverFood();
+                this.deliverFood(map);
             } else {
                 detectedHome = map.containsItem(this.posX, this.posY, this.perceptionRadius, 2); // 2 = COLONY
                 if (detectedHome[0]) {
