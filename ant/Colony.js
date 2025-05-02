@@ -8,6 +8,7 @@ export class Colony {
         Colony.img.src = "./img/colony.png";
         this.x = -1;
         this.y = -1;
+        AntWorker.pheromoneTimer = 1;
     }
 
     setAntNumber(antNumber) {
@@ -55,5 +56,6 @@ export class Colony {
         this.workers.forEach(ant =>{
             ant.update(canvas, map);
         });
+        AntWorker.pheromoneTimer = (AntWorker.pheromoneTimer + 1) % 15;
     }
 }

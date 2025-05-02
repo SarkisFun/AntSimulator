@@ -98,9 +98,6 @@ export class MapGrid {
         if(this.grid[coordinates[0]][coordinates[1]].content === EMPTY) {
             this.grid[coordinates[0]][coordinates[1]].addPheromone(this.offScreenCtx, x, y, type);
             this.draw(canvas);
-            return true;
-        } else {
-            return false;
         }
     }
 

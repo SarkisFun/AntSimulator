@@ -198,7 +198,7 @@ export class Simulation {
 
     eraseStats() {
         Simulation.ctx.save();
-        Simulation.ctx.clearRect(0, 0, STATS_WIDTH, STATS_HEIGHT);
+        Simulation.ctx.clearRect(STATS_POS_X, STATS_POS_Y, STATS_WIDTH, STATS_HEIGHT);
         Simulation.ctx.restore();
     }
 

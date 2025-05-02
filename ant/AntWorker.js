@@ -13,6 +13,7 @@ const TO_HOME = 0;
 export class AntWorker {
     //static img;
     static scale = 10; // TODO scale should depend of size
+    static pheromoneTimer;
 
     constructor(posX, posY){
         this.img = new Image();
@@ -24,7 +25,6 @@ export class AntWorker {
         this.angle = Math.random() * Math.PI * 2;
         this.carryingFood = false;
         this.perceptionRadius = DEFAULT_PERCEPTION_RADIUS;
-        this.pheromoneTimer = 1;
         this.status = SCOUTING;
     }
     
@@ -90,11 +90,9 @@ export class AntWorker {
     }
 
     leavePheromone(map) {
-        this.pheromoneTimer = (this.pheromoneTimer + 1) % 15;
-        if (this.pheromoneTimer === 0) {
-            if (!map.addPheromone(this.posX, this.posY, TO_HOME)) {
-                this.pheromoneTimer--;
-            }
+        //this.pheromoneTimer = (this.pheromoneTimer + 1) % 15;
+        if (AntWorker.pheromoneTimer === 0) {
+            map.addPheromone(this.posX, this.posY, TO_HOME);
         }
     }
 

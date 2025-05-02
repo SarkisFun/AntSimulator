@@ -70,7 +70,7 @@ export class Tile {
         ctx.arc(
             this.pheromoneCenterX,
             this.pheromoneCenterY,
-            Tile.width+ 1, // Radius of the circle
+            Tile.width + 0.15, // Radius of the circle
             0, 
             Math.PI * 2
         );
