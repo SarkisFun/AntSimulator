@@ -9,6 +9,7 @@ const GOING_HOME = 1;
 
 // Pheromone types
 const TO_HOME = 0;
+const TO_FOOD = 1;
 
 export class AntWorker {
     //static img;
@@ -68,7 +69,12 @@ export class AntWorker {
 
         this.rotationAngle = Math.atan2(dy, dx);
 
-        this.leavePheromone(map);
+        if (this.carryingFood) {
+            this.leavePheromone(map, TO_FOOD);
+        } else {
+            this.leavePheromone(map, TO_HOME);
+        }
+        
     }
     
     moveTowardsPoint(map, foodX, foodY) {
@@ -86,13 +92,16 @@ export class AntWorker {
 
         this.rotationAngle = Math.atan2(dy, dx);
 
-        this.leavePheromone(map);
+        if (this.carryingFood) {
+            this.leavePheromone(map, TO_FOOD);
+        } else {
+            this.leavePheromone(map, TO_HOME);
+        }
     }
 
-    leavePheromone(map) {
-        //this.pheromoneTimer = (this.pheromoneTimer + 1) % 15;
+    leavePheromone(map, pheromoneType) {
         if (AntWorker.pheromoneTimer === 0) {
-            map.addPheromone(this.posX, this.posY, TO_HOME);
+            map.addPheromone(this.posX, this.posY, pheromoneType);
         }
     }
 
@@ -152,8 +161,14 @@ export class AntWorker {
                     this.moveTowardsPoint(map, detectedHome[1], detectedHome[2]);
                     this.draw(ctx);
                 } else {
-                    this.move(canvas, map);
-                    this.draw(ctx);
+                    let detectedPheromone = map.containsPheromone(this.posX, this.posY, this.perceptionRadius, TO_HOME);
+                    if (detectedPheromone[0]) {
+                        this.moveTowardsPoint(map, detectedPheromone[1], detectedPheromone[2]);
+                        this.draw(ctx);
+                    } else {
+                        this.move(canvas, map);
+                        this.draw(ctx);
+                    }
                 }
             }
         }

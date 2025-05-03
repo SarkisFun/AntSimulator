@@ -9,6 +9,7 @@ const PHEROMONED = 4;
 
 // Pheromone types
 const TO_HOME = 0;
+const TO_FOOD = 1;
 
 export class Tile {
     static width;
@@ -16,15 +17,13 @@ export class Tile {
 
     constructor() {
         this.content = EMPTY;
-        //this.pheromoneType = -1;
-        //this.pheromoneIntensity = 0;
     }
 
     addPheromone(ctx, x, y, type) {
         this.content = PHEROMONED;
         this.pheromoneType = type;
         this.pheromoneIntensity = 100;
-        this.drawPheromone(ctx, x, y)
+        this.drawPheromone(ctx, x, y, type)
     }
 
     drawPheromone(ctx, x, y) {
@@ -36,7 +35,14 @@ export class Tile {
             0, 
             Math.PI * 2
         );
-        ctx.fillStyle = "rgba(0, 0, 255)";
+        switch (this.pheromoneType) {
+            case TO_HOME:
+                ctx.fillStyle = "rgba(0, 0, 255)";
+                break;
+            case TO_FOOD:
+                ctx.fillStyle = "rgba(0, 255, 0)";
+                break;
+        }
         ctx.fill();
     }
 
@@ -57,7 +63,14 @@ export class Tile {
                 0,
                 Math.PI * 2
             );
-            ctx.fillStyle = `rgba(0, 0, 255, ${alpha})`; // Blue color with dynamic transparency
+            switch (this.pheromoneType) {
+                case TO_HOME:
+                    ctx.fillStyle = `rgba(0, 0, 255, ${alpha})`;
+                    break;
+                case TO_FOOD:
+                    ctx.fillStyle = `rgba(0, 255, 0, ${alpha})`;
+                    break;
+            }
             ctx.fill();
             ctx.restore();
             }
@@ -70,7 +83,7 @@ export class Tile {
         ctx.arc(
             this.pheromoneCenterX,
             this.pheromoneCenterY,
-            Tile.width + 0.15, // Radius of the circle
+            Tile.width + 0.3, // Radius of the circle
             0, 
             Math.PI * 2
         );

@@ -81,9 +81,44 @@ export class MapGrid {
         if (nearestFood[0]) {
             let coordinates = this.getRealCoordinates([nearestFood[1], nearestFood[2]]);
             nearestFood[1] = coordinates[0];
-            nearestFood[2] = coordinates[1]
+            nearestFood[2] = coordinates[1];
         }
         return nearestFood;
+    }
+
+    containsPheromone(x, y, radius, pheromoneType) {
+        let coordinates = this.getGridCoordinates(x, y);
+        let minIntensity = 100;
+        let preferedPheromone = [false, null, null];
+
+        for (let i = -radius; i <= radius; i++) {
+            for (let j = -radius; j <= radius; j++) {
+                const newX = coordinates[0] + i;
+                const newY = coordinates[1] + j;
+                
+                // Check if coordinates are within bounds and radius
+                if (newX >= 0 && newX < this.mapWidth && newY >= 0 &&
+                    newY < this.mapHeight &&
+                    Math.sqrt(i * i + j * j) <= radius) { // Check if Euclidean distance is within radius
+
+                    if (this.grid[newX][newY].content === PHEROMONED &&
+                        this.grid[newX][newY].pheromoneType === pheromoneType) {
+                            preferedPheromone[0] = true;
+                            if (this.grid[newX][newY].pheromoneIntensity <= minIntensity) {
+                                minIntensity = this.grid[newX][newY].pheromoneIntensity;
+                                preferedPheromone[1] = newX;
+                                preferedPheromone[2] = newY;                          
+                            }
+                    }
+                }
+            }
+        }
+        if (preferedPheromone[0]) {
+            let coordinates = this.getRealCoordinates([preferedPheromone[1], preferedPheromone[2]]);
+            preferedPheromone[1] = coordinates[0];
+            preferedPheromone[2] = coordinates[1];
+        }
+        return preferedPheromone;
     }
 
     takeFood(foodX, foodY) {
