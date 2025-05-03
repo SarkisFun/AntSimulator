@@ -1,4 +1,4 @@
-const PHEROMONE_DECAY_RATE = 0.2;
+const PHEROMONE_DECAY_RATE = 0.1;
 
 // Tile content types
 const EMPTY = 0;
@@ -19,9 +19,10 @@ export class Tile {
         this.content = EMPTY;
     }
 
-    addPheromone(ctx, x, y, type) {
+    addPheromone(ctx, x, y, type, distanceToColony) {
         this.content = PHEROMONED;
         this.pheromoneType = type;
+        this.distanceToColony = distanceToColony;
         this.pheromoneIntensity = 100;
         this.drawPheromone(ctx, x, y, type)
     }

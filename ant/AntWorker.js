@@ -77,10 +77,10 @@ export class AntWorker {
         
     }
     
-    moveTowardsPoint(map, foodX, foodY) {
+    moveTowardsPoint(map, pointX, pointY) {
         // Calculate angle towards point
-        let dx = foodX - this.posX;
-        let dy = foodY - this.posY;
+        let dx = pointX - this.posX;
+        let dy = pointY - this.posY;
         this.angle = Math.atan2(dy, dx);
 
         // Calculate movement in direction of point
@@ -141,33 +141,59 @@ export class AntWorker {
             let detectedFood = map.containsItem(this.posX, this.posY, this.size, 3); // 3 = FOOD
             if (detectedFood[0]) { // Ant colliding with food
                 this.pickUpFood(map, detectedFood[1], detectedFood[2]);
+                //console.log("I got food")
             } else { // Ant not colliding with food
                 detectedFood = map.containsItem(this.posX, this.posY, this.perceptionRadius, 3); // 3 = FOOD
                 if (detectedFood[0]) { // Ant perceives food
+                    //console.log("I see food")
                     this.moveTowardsPoint(map, detectedFood[1], detectedFood[2]);
                     this.draw(ctx);
                 } else { // No food in Ant perception radius
-                    this.move(canvas, map);
-                    this.draw(ctx);
+                    let detectedPheromone = map.containsPheromone(this.posX, this.posY, this.size, TO_FOOD);
+                    if (detectedPheromone[0]) { // Im on a food pheromone
+                        this.move(canvas, map);
+                        this.draw(ctx);
+                    } else {
+                        detectedPheromone = map.containsPheromone(this.posX, this.posY, this.perceptionRadius, TO_FOOD);
+                        if (detectedPheromone[0]) { // Food pheromone detected
+                            //console.log("I see a food pheromone")
+                            this.moveTowardsPoint(map, detectedPheromone[1], detectedPheromone[2])
+                            this.draw(ctx);
+                        } else { // Food pheromone not detected
+                            //console.log("I don't see any food")
+                            this.move(canvas, map);
+                            this.draw(ctx);
+                        }
+                    }
                 }       
             }
         } else { // Ant has food
             let detectedHome = map.containsItem(this.posX, this.posY, this.size, 2); // 2 = COLONY
             if (detectedHome[0]) {
                 this.deliverFood(map);
+                //console.log("I delivered food")
             } else {
                 detectedHome = map.containsItem(this.posX, this.posY, this.perceptionRadius, 2); // 2 = COLONY
                 if (detectedHome[0]) {
+                    //console.log("I see home")
                     this.moveTowardsPoint(map, detectedHome[1], detectedHome[2]);
                     this.draw(ctx);
                 } else {
-                    let detectedPheromone = map.containsPheromone(this.posX, this.posY, this.perceptionRadius, TO_HOME);
+                    let detectedPheromone = map.containsPheromone(this.posX, this.posY, this.size, TO_HOME);
                     if (detectedPheromone[0]) {
-                        this.moveTowardsPoint(map, detectedPheromone[1], detectedPheromone[2]);
+                        this.move(canvas, map); // Im on a food pheromone
                         this.draw(ctx);
                     } else {
-                        this.move(canvas, map);
-                        this.draw(ctx);
+                        detectedPheromone = map.containsPheromone(this.posX, this.posY, this.perceptionRadius, TO_HOME);
+                        if (detectedPheromone[0]) {
+                            //console.log("I see a home pheromone")
+                            this.moveTowardsPoint(map, detectedPheromone[1], detectedPheromone[2]);
+                            this.draw(ctx);
+                        } else {
+                            //console.log("I don't know the way home")
+                            this.move(canvas, map);
+                            this.draw(ctx);
+                        }
                     }
                 }
             }

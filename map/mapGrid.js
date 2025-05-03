@@ -8,6 +8,10 @@ const COLONY = 2;
 const FOOD = 3;
 const PHEROMONED = 4;
 
+// Pheromone types
+const TO_HOME = 0;
+const TO_FOOD = 1;
+
 export class MapGrid {
 
     constructor(tileSize, width, height) {
@@ -40,6 +44,10 @@ export class MapGrid {
 
     getRealCoordinates(gridCoordinates) {
         return [gridCoordinates[0] * Tile.width, gridCoordinates[1] * Tile.height];
+    }
+
+    calculateDistanceToColony(x, y) {
+        return Math.sqrt(Math.pow(x - this.colony.x, 2) + Math.pow(y - this.colony.y, 2))
     }
 
     isInGrid(x, y) {
@@ -89,6 +97,7 @@ export class MapGrid {
     containsPheromone(x, y, radius, pheromoneType) {
         let coordinates = this.getGridCoordinates(x, y);
         let minIntensity = 100;
+        let minDistanceToColony = Infinity;
         let preferedPheromone = [false, null, null];
 
         for (let i = -radius; i <= radius; i++) {
@@ -103,12 +112,30 @@ export class MapGrid {
 
                     if (this.grid[newX][newY].content === PHEROMONED &&
                         this.grid[newX][newY].pheromoneType === pheromoneType) {
-                            preferedPheromone[0] = true;
-                            if (this.grid[newX][newY].pheromoneIntensity <= minIntensity) {
-                                minIntensity = this.grid[newX][newY].pheromoneIntensity;
-                                preferedPheromone[1] = newX;
-                                preferedPheromone[2] = newY;                          
-                            }
+                            const distanceToColony = this.grid[newX][newY].distanceToColony;
+                            const intensity = this.grid[newX][newY].pheromoneIntensity;
+                            // preferedPheromone[0] = true;
+                            // if (pheromoneType == TO_FOOD) {
+                            //     if (this.grid[newX][newY].pheromoneIntensity <= minIntensity && this.grid[newX][newY].pheromoneIntensity > 5) {
+                            //         minIntensity = this.grid[newX][newY].pheromoneIntensity;
+                            //         preferedPheromone[1] = newX;
+                            //         preferedPheromone[2] = newY;                          
+                            //     }
+                            // } else {
+                            //     if (this.grid[newX][newY].distanceToColony <= minDistanceToColony && this.grid[newX][newY].pheromoneIntensity > 5) {
+                            //         minDistanceToColony = this.grid[newX][newY].distanceToColony;
+                            //         preferedPheromone[1] = newX;
+                            //         preferedPheromone[2] = newY;                          
+                            //     }
+                            // }
+                            // Prioritize pheromones leading closer to the goal
+                        if (pheromoneType === TO_FOOD && intensity < minIntensity) {
+                            minIntensity = intensity;
+                            preferedPheromone = [true, newX, newY];
+                        } else if (pheromoneType === TO_HOME && distanceToColony < minDistanceToColony) {
+                            minDistanceToColony = distanceToColony;
+                            preferedPheromone = [true, newX, newY];
+                        }
                     }
                 }
             }
@@ -131,7 +158,7 @@ export class MapGrid {
     addPheromone(x, y, type) {
         let coordinates = this.getGridCoordinates(x, y);
         if(this.grid[coordinates[0]][coordinates[1]].content === EMPTY) {
-            this.grid[coordinates[0]][coordinates[1]].addPheromone(this.offScreenCtx, x, y, type);
+            this.grid[coordinates[0]][coordinates[1]].addPheromone(this.offScreenCtx, x, y, type, this.calculateDistanceToColony(coordinates[0], coordinates[1]));
             this.draw(canvas);
         }
     }
