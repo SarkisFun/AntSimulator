@@ -29,6 +29,7 @@ export class AntWorker {
         this.perceptionRadius = DEFAULT_PERCEPTION_RADIUS;
         this.status = SCOUTING;
         this.visitedPheromones = new Set();
+        this.steps = 0;
     }
     
     addVisitedPheromone(x, y) {
@@ -91,7 +92,7 @@ export class AntWorker {
         } else {
             this.leavePheromone(map, TO_HOME);
         }
-        
+        this.steps++;
     }
     
     moveTowardsPoint(map, pointX, pointY) {
@@ -114,11 +115,16 @@ export class AntWorker {
         } else {
             this.leavePheromone(map, TO_HOME);
         }
+        this.steps++;
     }
 
     leavePheromone(map, pheromoneType) {
         if (AntWorker.pheromoneTimer === 0) {
-            map.addPheromone(this.posX, this.posY, pheromoneType);
+            if (pheromoneType === TO_HOME) {
+                map.addPheromone(this.posX, this.posY, pheromoneType, this.steps);
+            } else {
+                map.addPheromone(this.posX, this.posY, pheromoneType);
+            } 
         }
     }
 
@@ -130,6 +136,7 @@ export class AntWorker {
     deliverFood(map) {
         this.carryingFood = false;
         map.foodQuantity--;
+        this.steps = 0;
     }
 
     draw(ctx) {
@@ -197,13 +204,13 @@ export class AntWorker {
                     this.moveTowardsPoint(map, detectedHome[1], detectedHome[2]);
                     this.draw(ctx);
                 } else {
-                    let detectedPheromone = map.containsHomePheromone(this.posX, this.posY, this.size);
+                    let detectedPheromone = map.containsHomePheromone(this.posX, this.posY, this.size, this.steps);
                     if (detectedPheromone[0] && !this.hasVisitedPheromone(detectedPheromone[1], detectedPheromone[2])) {
                         this.addVisitedPheromone(detectedPheromone[1], detectedPheromone[2]);
                         this.move(canvas, map); // Im on a food pheromone
                         this.draw(ctx);
                     } else {
-                        detectedPheromone = map.containsHomePheromone(this.posX, this.posY, this.perceptionRadius);
+                        detectedPheromone = map.containsHomePheromone(this.posX, this.posY, this.perceptionRadius, this.steps);
                         if (detectedPheromone[0] && !this.hasVisitedPheromone(detectedPheromone[1], detectedPheromone[2])) {
                             //console.log("I see a home pheromone")
                             this.moveTowardsPoint(map, detectedPheromone[1], detectedPheromone[2]);

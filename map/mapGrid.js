@@ -94,10 +94,9 @@ export class MapGrid {
         return nearestFood;
     }
 
-    containsHomePheromone(x, y, radius) {
+    containsHomePheromone(x, y, radius, antSteps) {
         let coordinates = this.getGridCoordinates(x, y);
-        let minIntensity = 100;
-        let minDistanceToColony = Infinity;
+        let minSteps = Infinity;
         let preferedPheromone = [false, null, null];
 
         for (let i = -radius; i <= radius; i++) {
@@ -112,11 +111,10 @@ export class MapGrid {
 
                     if (this.grid[newX][newY].content === PHEROMONED &&
                         this.grid[newX][newY].pheromoneType === TO_HOME) {
-                            const distanceToColony = this.grid[newX][newY].distanceToColony;
-                            const intensity = this.grid[newX][newY].pheromoneIntensity;
+                            let pheromoneSteps = this.grid[newX][newY].pheromoneSteps || 0;
                         // Prioritize pheromones leading closer to the goal
-                        if (distanceToColony < minDistanceToColony) {
-                            minDistanceToColony = distanceToColony;
+                        if (pheromoneSteps <= antSteps && pheromoneSteps < minSteps) {
+                            minSteps = pheromoneSteps;
                             preferedPheromone = [true, newX, newY];
                         }
                     }
@@ -175,10 +173,10 @@ export class MapGrid {
             Tile.height * coordinates[1], Tile.width, Tile.height);
     }
 
-    addPheromone(x, y, type) {
+    addPheromone(x, y, type, steps = null) {
         let coordinates = this.getGridCoordinates(x, y);
         if(this.grid[coordinates[0]][coordinates[1]].content === EMPTY) {
-            this.grid[coordinates[0]][coordinates[1]].addPheromone(this.offScreenCtx, x, y, type, this.calculateDistanceToColony(coordinates[0], coordinates[1]));
+            this.grid[coordinates[0]][coordinates[1]].addPheromone(this.offScreenCtx, x, y, type, steps);
             this.draw(canvas);
         }
     }

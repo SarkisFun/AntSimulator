@@ -19,10 +19,12 @@ export class Tile {
         this.content = EMPTY;
     }
 
-    addPheromone(ctx, x, y, type, distanceToColony) {
+    addPheromone(ctx, x, y, type, steps = null) {
         this.content = PHEROMONED;
         this.pheromoneType = type;
-        this.distanceToColony = distanceToColony;
+        if (type === TO_HOME) {
+            this.pheromoneSteps = steps;
+        }
         this.pheromoneIntensity = 100;
         this.drawPheromone(ctx, x, y, type)
     }
@@ -52,6 +54,7 @@ export class Tile {
         if (this.pheromoneIntensity <= 0) {
             this.erasePheromone(ctx);
             this.content = EMPTY;
+            this.pheromoneSteps = null;
         } else {
             this.erasePheromone(ctx);
             const alpha = this.pheromoneIntensity / 100; // Calculate transparency
@@ -74,7 +77,7 @@ export class Tile {
             }
             ctx.fill();
             ctx.restore();
-            }
+        }
     }
 
     erasePheromone(ctx) {
