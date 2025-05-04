@@ -25,7 +25,9 @@ export class MapGrid {
         this.offScreenCanvas.height = height;
         this.offScreenCtx = this.offScreenCanvas.getContext('2d');
         this.colony = new Colony();
-        this.foodQuantity = 0;
+        this.foodAvaliable = 0;
+        this.foodInTransit = 0;
+        this.foodAtColony = 0;
 
         for (let i = 0; i < this.mapWidth; i++) {
             this.grid[i] = new Array(this.mapHeight);  
@@ -223,7 +225,7 @@ export class MapGrid {
                      Math.sqrt(i * i + j * j) <= radius && // Check if Euclidean distance is within radius
                      this.grid[newX][newY].content != COLONY) { 
                     if (this.grid[newX][newY].content === FOOD) {
-                        this.foodQuantity--;
+                        this.foodAvaliable--;
                     }
                     this.grid[newX][newY].content = WALL;
 
@@ -253,7 +255,7 @@ export class MapGrid {
                      this.grid[newX][newY].content != WALL && this.grid[newX][newY].content != COLONY &&
                      this.grid[newX][newY].content != FOOD) { 
                     this.grid[newX][newY].content = FOOD;
-                    this.foodQuantity++;
+                    this.foodAvaliable++;
 
                     this.offScreenCtx.beginPath();
                     this.offScreenCtx.arc(
@@ -288,7 +290,7 @@ export class MapGrid {
                     this.grid[newX][newY].content != COLONY) {   
                     
                     if (this.grid[newX][newY].content == FOOD){
-                        this.foodQuantity--;
+                        this.foodAvaliable--;
                     }
                     this.grid[newX][newY].content = EMPTY;
 

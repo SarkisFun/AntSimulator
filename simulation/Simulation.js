@@ -6,7 +6,7 @@ const ZOOM_SCALE_FACTOR = 1.1;
 const MAX_ZOOM = 5;
 const DEFAULT_TILE_SIZE = 3;
 const STATS_WIDTH = 200;
-const STATS_HEIGHT = 100;
+const STATS_HEIGHT = 140;
 const STATS_POS_X = 5;
 const STATS_POS_Y = 5;
 
@@ -190,9 +190,15 @@ export class Simulation {
         Simulation.ctx.fillText(`FPS: ${this.fps}`, 10 + STATS_POS_X, 50 + STATS_POS_Y);
         Simulation.ctx.fillText(`Frame #: ${this.frameCounter}`, 10 + STATS_POS_X,
              70 + STATS_POS_Y);
+        Simulation.ctx.fillStyle = "blue";
+        Simulation.ctx.fillText(`Comida en colonia: ${this.map.foodAtColony}`, 10 + STATS_POS_X,
+            90 + STATS_POS_Y);
+        Simulation.ctx.fillStyle = "orange";
+        Simulation.ctx.fillText(`Comida en transito: ${this.map.foodInTransit}`, 10 + STATS_POS_X,
+            110 + STATS_POS_Y);
         Simulation.ctx.fillStyle = "green";
-        Simulation.ctx.fillText(`Comida disponible: ${this.map.foodQuantity}`,
-             10 + STATS_POS_X, 90 + STATS_POS_Y);
+        Simulation.ctx.fillText(`Comida disponible: ${this.map.foodAvaliable}`,
+             10 + STATS_POS_X, 130 + STATS_POS_Y);
         Simulation.ctx.restore();
     }
 
@@ -235,6 +241,8 @@ export class Simulation {
                 Simulation.ctx.clearRect(0, 0, canvas.width, canvas.height); 
                 this.frameCounter = 0;
                 this.fps = 0;
+                this.map.foodInTransit = 0;
+                this.map.foodAtColony = 0;
                 this.map.clearPheromones(Simulation.canvas);
                 this.map.draw(Simulation.canvas);
                 this.map.colony.draw(Simulation.canvas);

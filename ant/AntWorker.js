@@ -134,6 +134,8 @@ export class AntWorker {
 
     pickUpFood(map, foodX, foodY) {
         map.takeFood(foodX, foodY);
+        map.foodInTransit++;
+        map.foodAvaliable--;
         this.carryingFood = true;
         this.stepsToFood = 0;
         this.stepsToHome = Infinity;
@@ -141,7 +143,8 @@ export class AntWorker {
 
     deliverFood(map) {
         this.carryingFood = false;
-        map.foodQuantity--;
+        map.foodAtColony++;
+        map.foodInTransit--;
         this.stepsToHome = 0;
         this.stepsToFood = Infinity;
     }
