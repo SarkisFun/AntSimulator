@@ -2,6 +2,7 @@ const MIN_SPEED = 1.6;
 const MAX_SEED = 2.6;
 const DEFAULT_SIZE = 5;
 const DEFAULT_PERCEPTION_RADIUS = 20;
+const MAX_VISITED_PHEROMONES = 20;
 
 // Status
 const SCOUTING = 0;
@@ -27,8 +28,24 @@ export class AntWorker {
         this.carryingFood = false;
         this.perceptionRadius = DEFAULT_PERCEPTION_RADIUS;
         this.status = SCOUTING;
+        this.visitedPheromones = new Set();
     }
     
+    addVisitedPheromone(x, y) {
+        const key = `${Math.floor(x)},${Math.floor(y)}`;
+        if (this.visitedPheromones.size >= MAX_VISITED_PHEROMONES) {
+            // Remove the oldest entry (FIFO behavior)
+            const firstKey = this.visitedPheromones.values().next().value;
+            this.visitedPheromones.delete(firstKey);
+        }
+        this.visitedPheromones.add(key);
+    }
+
+    hasVisitedPheromone(x, y) {
+        const key = `${Math.floor(x)},${Math.floor(y)}`;
+        return this.visitedPheromones.has(key);
+    }
+
     // Moves ant and returns rotation angle to draw properly
     move(canvas, map) {
         // Calculate new angle and direction
@@ -150,12 +167,13 @@ export class AntWorker {
                     this.draw(ctx);
                 } else { // No food in Ant perception radius
                     let detectedPheromone = map.containsFoodPheromone(this.posX, this.posY, this.size);
-                    if (detectedPheromone[0]) { // Im on a food pheromone
+                    if (detectedPheromone[0] && !this.hasVisitedPheromone(detectedPheromone[1], detectedPheromone[2])) { // Im on a food pheromone
+                        this.addVisitedPheromone(detectedPheromone[1], detectedPheromone[2]);
                         this.move(canvas, map);
                         this.draw(ctx);
                     } else {
                         detectedPheromone = map.containsFoodPheromone(this.posX, this.posY, this.perceptionRadius);
-                        if (detectedPheromone[0]) { // Food pheromone detected
+                        if (detectedPheromone[0] && !this.hasVisitedPheromone(detectedPheromone[1], detectedPheromone[2])) { // Food pheromone detected
                             //console.log("I see a food pheromone")
                             this.moveTowardsPoint(map, detectedPheromone[1], detectedPheromone[2])
                             this.draw(ctx);
@@ -180,12 +198,13 @@ export class AntWorker {
                     this.draw(ctx);
                 } else {
                     let detectedPheromone = map.containsHomePheromone(this.posX, this.posY, this.size);
-                    if (detectedPheromone[0]) {
+                    if (detectedPheromone[0] && !this.hasVisitedPheromone(detectedPheromone[1], detectedPheromone[2])) {
+                        this.addVisitedPheromone(detectedPheromone[1], detectedPheromone[2]);
                         this.move(canvas, map); // Im on a food pheromone
                         this.draw(ctx);
                     } else {
                         detectedPheromone = map.containsHomePheromone(this.posX, this.posY, this.perceptionRadius);
-                        if (detectedPheromone[0]) {
+                        if (detectedPheromone[0] && !this.hasVisitedPheromone(detectedPheromone[1], detectedPheromone[2])) {
                             //console.log("I see a home pheromone")
                             this.moveTowardsPoint(map, detectedPheromone[1], detectedPheromone[2]);
                             this.draw(ctx);
