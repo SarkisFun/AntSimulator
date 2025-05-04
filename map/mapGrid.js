@@ -94,7 +94,7 @@ export class MapGrid {
         return nearestFood;
     }
 
-    containsPheromone(x, y, radius, pheromoneType) {
+    containsHomePheromone(x, y, radius) {
         let coordinates = this.getGridCoordinates(x, y);
         let minIntensity = 100;
         let minDistanceToColony = Infinity;
@@ -111,29 +111,49 @@ export class MapGrid {
                     Math.sqrt(i * i + j * j) <= radius) { // Check if Euclidean distance is within radius
 
                     if (this.grid[newX][newY].content === PHEROMONED &&
-                        this.grid[newX][newY].pheromoneType === pheromoneType) {
+                        this.grid[newX][newY].pheromoneType === TO_HOME) {
                             const distanceToColony = this.grid[newX][newY].distanceToColony;
                             const intensity = this.grid[newX][newY].pheromoneIntensity;
-                            // preferedPheromone[0] = true;
-                            // if (pheromoneType == TO_FOOD) {
-                            //     if (this.grid[newX][newY].pheromoneIntensity <= minIntensity && this.grid[newX][newY].pheromoneIntensity > 5) {
-                            //         minIntensity = this.grid[newX][newY].pheromoneIntensity;
-                            //         preferedPheromone[1] = newX;
-                            //         preferedPheromone[2] = newY;                          
-                            //     }
-                            // } else {
-                            //     if (this.grid[newX][newY].distanceToColony <= minDistanceToColony && this.grid[newX][newY].pheromoneIntensity > 5) {
-                            //         minDistanceToColony = this.grid[newX][newY].distanceToColony;
-                            //         preferedPheromone[1] = newX;
-                            //         preferedPheromone[2] = newY;                          
-                            //     }
-                            // }
-                            // Prioritize pheromones leading closer to the goal
-                        if (pheromoneType === TO_FOOD && intensity < minIntensity) {
-                            minIntensity = intensity;
-                            preferedPheromone = [true, newX, newY];
-                        } else if (pheromoneType === TO_HOME && distanceToColony < minDistanceToColony) {
+                        // Prioritize pheromones leading closer to the goal
+                        if (distanceToColony < minDistanceToColony) {
                             minDistanceToColony = distanceToColony;
+                            preferedPheromone = [true, newX, newY];
+                        }
+                    }
+                }
+            }
+        }
+        if (preferedPheromone[0]) {
+            let coordinates = this.getRealCoordinates([preferedPheromone[1], preferedPheromone[2]]);
+            preferedPheromone[1] = coordinates[0];
+            preferedPheromone[2] = coordinates[1];
+        }
+        return preferedPheromone;
+    }
+
+    containsFoodPheromone(x, y, radius) {
+        let coordinates = this.getGridCoordinates(x, y);
+        let minIntensity = 100;
+        let minDistanceToColony = Infinity;
+        let preferedPheromone = [false, null, null];
+
+        for (let i = -radius; i <= radius; i++) {
+            for (let j = -radius; j <= radius; j++) {
+                const newX = coordinates[0] + i;
+                const newY = coordinates[1] + j;
+                
+                // Check if coordinates are within bounds and radius
+                if (newX >= 0 && newX < this.mapWidth && newY >= 0 &&
+                    newY < this.mapHeight &&
+                    Math.sqrt(i * i + j * j) <= radius) { // Check if Euclidean distance is within radius
+
+                    if (this.grid[newX][newY].content === PHEROMONED &&
+                        this.grid[newX][newY].pheromoneType === TO_FOOD) {
+                            const distanceToColony = this.grid[newX][newY].distanceToColony;
+                            const intensity = this.grid[newX][newY].pheromoneIntensity;
+                        // Prioritize pheromones leading closer to the goal
+                        if (intensity < minIntensity) {
+                            minIntensity = intensity;
                             preferedPheromone = [true, newX, newY];
                         }
                     }
