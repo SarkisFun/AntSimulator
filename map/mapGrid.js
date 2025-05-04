@@ -115,7 +115,7 @@ export class MapGrid {
                         // Prioritize pheromones leading closer to the goal
                         if (pheromoneSteps <= antSteps && pheromoneSteps < minSteps) {
                             minSteps = pheromoneSteps;
-                            preferedPheromone = [true, newX, newY];
+                            preferedPheromone = [true, newX, newY, minSteps];
                         }
                     }
                 }
@@ -129,10 +129,9 @@ export class MapGrid {
         return preferedPheromone;
     }
 
-    containsFoodPheromone(x, y, radius) {
+    containsFoodPheromone(x, y, radius, antSteps) {
         let coordinates = this.getGridCoordinates(x, y);
-        let minIntensity = 100;
-        let minDistanceToColony = Infinity;
+        let minSteps = Infinity;
         let preferedPheromone = [false, null, null];
 
         for (let i = -radius; i <= radius; i++) {
@@ -147,12 +146,11 @@ export class MapGrid {
 
                     if (this.grid[newX][newY].content === PHEROMONED &&
                         this.grid[newX][newY].pheromoneType === TO_FOOD) {
-                            const distanceToColony = this.grid[newX][newY].distanceToColony;
-                            const intensity = this.grid[newX][newY].pheromoneIntensity;
+                            let pheromoneSteps = this.grid[newX][newY].pheromoneSteps;
                         // Prioritize pheromones leading closer to the goal
-                        if (intensity < minIntensity) {
-                            minIntensity = intensity;
-                            preferedPheromone = [true, newX, newY];
+                        if (pheromoneSteps <= antSteps && pheromoneSteps < minSteps) {
+                            minSteps = pheromoneSteps;
+                            preferedPheromone = [true, newX, newY, minSteps];
                         }
                     }
                 }
@@ -173,7 +171,7 @@ export class MapGrid {
             Tile.height * coordinates[1], Tile.width, Tile.height);
     }
 
-    addPheromone(x, y, type, steps = null) {
+    addPheromone(x, y, type, steps) {
         let coordinates = this.getGridCoordinates(x, y);
         if(this.grid[coordinates[0]][coordinates[1]].content === EMPTY) {
             this.grid[coordinates[0]][coordinates[1]].addPheromone(this.offScreenCtx, x, y, type, steps);

@@ -19,12 +19,10 @@ export class Tile {
         this.content = EMPTY;
     }
 
-    addPheromone(ctx, x, y, type, steps = null) {
+    addPheromone(ctx, x, y, type, steps) {
         this.content = PHEROMONED;
         this.pheromoneType = type;
-        if (type === TO_HOME) {
-            this.pheromoneSteps = steps;
-        }
+        this.pheromoneSteps = steps;
         this.pheromoneIntensity = 100;
         this.drawPheromone(ctx, x, y, type)
     }
