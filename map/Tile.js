@@ -19,35 +19,37 @@ export class Tile {
         this.content = EMPTY;
     }
 
-    addPheromone(ctx, x, y, type, steps) {
+    addPheromone(ctx, x, y, type, steps, showPheromones) {
         this.content = PHEROMONED;
         this.pheromoneType = type;
         this.pheromoneSteps = steps;
         this.pheromoneIntensity = 100;
-        this.drawPheromone(ctx, x, y, type)
+        this.drawPheromone(ctx, x, y, type, showPheromones)
     }
 
-    drawPheromone(ctx, x, y) {
+    drawPheromone(ctx, x, y, showPheromones) {
         this.pheromoneCenterX = x;
         this.pheromoneCenterY = y;
-        ctx.beginPath();
-        ctx.arc(this.pheromoneCenterX, this.pheromoneCenterY,
-            Tile.width, // Radius of the circle
-            0, 
-            Math.PI * 2
-        );
-        switch (this.pheromoneType) {
-            case TO_HOME:
-                ctx.fillStyle = "rgba(0, 0, 255)";
-                break;
-            case TO_FOOD:
-                ctx.fillStyle = "rgba(0, 255, 0)";
-                break;
+        if (showPheromones) {
+            ctx.beginPath();
+            ctx.arc(this.pheromoneCenterX, this.pheromoneCenterY,
+                Tile.width, // Radius of the circle
+                0, 
+                Math.PI * 2
+            );
+            switch (this.pheromoneType) {
+                case TO_HOME:
+                    ctx.fillStyle = "rgba(0, 0, 255)";
+                    break;
+                case TO_FOOD:
+                    ctx.fillStyle = "rgba(0, 255, 0)";
+                    break;
+            }
+            ctx.fill();    
         }
-        ctx.fill();
     }
 
-    decayPheromone(ctx) {
+    decayPheromone(ctx, showPheromones) {
         this.pheromoneIntensity -= PHEROMONE_DECAY_RATE;
         if (this.pheromoneIntensity <= 0) {
             this.erasePheromone(ctx);
@@ -55,26 +57,28 @@ export class Tile {
             this.pheromoneSteps = null;
         } else {
             this.erasePheromone(ctx);
-            const alpha = this.pheromoneIntensity / 100; // Calculate transparency
-            ctx.save();
-            ctx.beginPath();
-            ctx.arc(
-                this.pheromoneCenterX,
-                this.pheromoneCenterY,
-                Tile.width, // Radius of the circle
-                0,
-                Math.PI * 2
-            );
-            switch (this.pheromoneType) {
-                case TO_HOME:
-                    ctx.fillStyle = `rgba(0, 0, 255, ${alpha})`;
-                    break;
-                case TO_FOOD:
-                    ctx.fillStyle = `rgba(0, 255, 0, ${alpha})`;
-                    break;
+            if (showPheromones) {
+                const alpha = this.pheromoneIntensity / 100; // Calculate transparency
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(
+                    this.pheromoneCenterX,
+                    this.pheromoneCenterY,
+                    Tile.width, // Radius of the circle
+                    0,
+                    Math.PI * 2
+                );
+                switch (this.pheromoneType) {
+                    case TO_HOME:
+                        ctx.fillStyle = `rgba(0, 0, 255, ${alpha})`;
+                        break;
+                    case TO_FOOD:
+                        ctx.fillStyle = `rgba(0, 255, 0, ${alpha})`;
+                        break;
+                }
+                ctx.fill();
+                ctx.restore(); 
             }
-            ctx.fill();
-            ctx.restore();
         }
     }
 

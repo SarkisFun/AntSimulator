@@ -75,6 +75,15 @@ document.getElementById("cbEstadisticas").addEventListener("click", function(eve
     }
 });
 
+// Pheromones checkbox listener
+document.getElementById("cbFeromonas").addEventListener("click", function(event) {
+    if (event.target.checked) {
+        simulation.map.showPheromones = true;
+    } else {
+        simulation.map.showPheromones = false;
+    }
+});
+
 // Colony drawing tool
 document.getElementById("btnDrawColony").addEventListener("click", () => {
     if (selectedTool != COLONY_TOOL) {

@@ -29,6 +29,7 @@ export class Simulation {
         this.status = STOPPED;
         this.placedColony = false;
         this.showStats = true;
+        this.showPheromones = true;
         this.map = new MapGrid(DEFAULT_TILE_SIZE, canvas.width, canvas.height);
         this.frameCounter = 0;
         this.fps = 0;

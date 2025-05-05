@@ -28,6 +28,7 @@ export class MapGrid {
         this.foodAvaliable = 0;
         this.foodInTransit = 0;
         this.foodAtColony = 0;
+        this.showPheromones = true;
 
         for (let i = 0; i < this.mapWidth; i++) {
             this.grid[i] = new Array(this.mapHeight);  
@@ -176,8 +177,11 @@ export class MapGrid {
     addPheromone(x, y, type, steps) {
         let coordinates = this.getGridCoordinates(x, y);
         if(this.grid[coordinates[0]][coordinates[1]].content === EMPTY) {
-            this.grid[coordinates[0]][coordinates[1]].addPheromone(this.offScreenCtx, x, y, type, steps);
-            this.draw(canvas);
+            this.grid[coordinates[0]][coordinates[1]].addPheromone(this.offScreenCtx, x, y, type, steps, this.showPheromones);
+            if (this.showPheromones) {
+                this.draw(canvas);
+            }
+            
         }
     }
 
@@ -306,7 +310,7 @@ export class MapGrid {
         for (let i = 0; i < this.mapWidth; i++) {
             for (let j = 0; j < this.mapHeight; j++) {
                 if (this.grid[i][j].content === PHEROMONED) {
-                    this.grid[i][j].decayPheromone(this.offScreenCtx);
+                    this.grid[i][j].decayPheromone(this.offScreenCtx, this.showPheromones);
                 }
             }
         }
