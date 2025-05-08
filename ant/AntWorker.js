@@ -176,6 +176,8 @@ export class AntWorker {
             this.stepsToHome = 1;
         }
 
+        //console.log("My distance to colony", map.calculateDistanceToColony(this.posX, this.posY));
+
         //console.log("MY STEPS TO HOME:", this.stepsToHome, "MY STEPS TO FOOD:", this.stepsToFood)
         if (!this.carryingFood) { // Ant has no food
             let detectedFood = map.containsItem(this.posX, this.posY, this.size, 3); // 3 = FOOD
@@ -222,17 +224,14 @@ export class AntWorker {
                     this.moveTowardsPoint(map, detectedHome[1], detectedHome[2]);
                     this.draw(ctx);
                 } else {
-                    let detectedPheromone = map.containsHomePheromone(this.posX, this.posY, this.size, this.stepsToHome);
-                    if (detectedPheromone[0] /*&& !this.hasVisitedPheromone(detectedPheromone[1], detectedPheromone[2])*/) {
-                        //this.addVisitedPheromone(detectedPheromone[1], detectedPheromone[2]);
-                        this.stepsToHome = detectedPheromone[3] + 3;
+                    let detectedPheromone = map.containsHomePheromone(this.posX, this.posY, this.size);
+                    if (detectedPheromone[0]) {
                         this.move(canvas, map); // Im on a food pheromone
                         this.draw(ctx);
                     } else {
-                        detectedPheromone = map.containsHomePheromone(this.posX, this.posY, this.perceptionRadius, this.stepsToHome);
-                        if (detectedPheromone[0]/* && !this.hasVisitedPheromone(detectedPheromone[1], detectedPheromone[2])*/) {
+                        detectedPheromone = map.containsHomePheromone(this.posX, this.posY, this.perceptionRadius);
+                        if (detectedPheromone[0]) {
                             //console.log("I see a home pheromone")
-                            this.stepsToHome = detectedPheromone[3] + 3;
                             this.moveTowardsPoint(map, detectedPheromone[1], detectedPheromone[2]);
                             this.draw(ctx);
                         } else {

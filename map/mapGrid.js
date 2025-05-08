@@ -97,9 +97,9 @@ export class MapGrid {
         return nearestFood;
     }
 
-    containsHomePheromone(x, y, radius, antSteps) {
+    containsHomePheromone(x, y, radius) {
         let coordinates = this.getGridCoordinates(x, y);
-        let minSteps = Infinity;
+        let bestDistance = Infinity;
         let preferedPheromone = [false, null, null];
 
         for (let i = -radius; i <= radius; i++) {
@@ -114,11 +114,14 @@ export class MapGrid {
 
                     if (this.grid[newX][newY].content === PHEROMONED &&
                         this.grid[newX][newY].pheromoneType === TO_HOME) {
-                            let pheromoneSteps = this.grid[newX][newY].pheromoneSteps || 0;
-                        // Prioritize pheromones leading closer to the goal
-                        if (pheromoneSteps <= antSteps && pheromoneSteps < minSteps) {
-                            minSteps = pheromoneSteps;
-                            preferedPheromone = [true, newX, newY, minSteps];
+                        let pheromoneCoords = this.getRealCoordinates([newX, newY]);
+                        let pheromoneDistance = this.calculateDistanceToColony(pheromoneCoords[0], pheromoneCoords[1]);
+                        if (pheromoneDistance < this.calculateDistanceToColony(x, y)) {
+                            // Prioritize pheromones leading closer to the goal
+                            if (pheromoneDistance < bestDistance) {
+                                bestDistance = pheromoneDistance;
+                                preferedPheromone = [true, newX, newY];
+                            }
                         }
                     }
                 }
