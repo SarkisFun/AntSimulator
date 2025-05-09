@@ -101,6 +101,7 @@ export class MapGrid {
         let coordinates = this.getGridCoordinates(x, y);
         let bestDistance = Infinity;
         let preferedPheromone = [false, null, null];
+        let myDistanceToColony = this.calculateDistanceToColony(x, y);
 
         for (let i = -radius; i <= radius; i++) {
             for (let j = -radius; j <= radius; j++) {
@@ -116,7 +117,7 @@ export class MapGrid {
                         this.grid[newX][newY].pheromoneType === TO_HOME) {
                         let pheromoneCoords = this.getRealCoordinates([newX, newY]);
                         let pheromoneDistance = this.calculateDistanceToColony(pheromoneCoords[0], pheromoneCoords[1]);
-                        if (pheromoneDistance < this.calculateDistanceToColony(x, y)) {
+                        if (pheromoneDistance < myDistanceToColony) {
                             // Prioritize pheromones leading closer to the goal
                             if (pheromoneDistance < bestDistance) {
                                 bestDistance = pheromoneDistance;
@@ -135,10 +136,12 @@ export class MapGrid {
         return preferedPheromone;
     }
 
-    containsFoodPheromone(x, y, radius, antSteps) {
+    containsFoodPheromone(x, y, radius/*, antSteps*/) {
         let coordinates = this.getGridCoordinates(x, y);
-        let minSteps = Infinity;
+        //let minSteps = Infinity;
+        let maxDistance = -Infinity;
         let preferedPheromone = [false, null, null];
+        let myDistanceToColony = this.calculateDistanceToColony(x, y);
 
         for (let i = -radius; i <= radius; i++) {
             for (let j = -radius; j <= radius; j++) {
@@ -152,12 +155,17 @@ export class MapGrid {
 
                     if (this.grid[newX][newY].content === PHEROMONED &&
                         this.grid[newX][newY].pheromoneType === TO_FOOD) {
-                            let pheromoneSteps = this.grid[newX][newY].pheromoneSteps;
-                        // Prioritize pheromones leading closer to the goal
-                        if (pheromoneSteps <= antSteps && pheromoneSteps < minSteps) {
-                            minSteps = pheromoneSteps;
-                            preferedPheromone = [true, newX, newY, minSteps];
+                            //let pheromoneSteps = this.grid[newX][newY].pheromoneSteps;
+                        let pheromoneCoords = this.getRealCoordinates([newX, newY]);
+                        let pheromoneDistance = this.calculateDistanceToColony(pheromoneCoords[0], pheromoneCoords[1]);
+                        if (pheromoneDistance > myDistanceToColony) {
+                            // Prioritize pheromones leading closer to the goal
+                            if (pheromoneDistance > maxDistance) {
+                                maxDistance = pheromoneDistance;
+                                preferedPheromone = [true, newX, newY];
+                            }
                         }
+                        
                     }
                 }
             }

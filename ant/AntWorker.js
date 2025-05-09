@@ -191,17 +191,14 @@ export class AntWorker {
                     this.moveTowardsPoint(map, detectedFood[1], detectedFood[2]);
                     this.draw(ctx);
                 } else { // No food in Ant perception radius
-                    let detectedPheromone = map.containsFoodPheromone(this.posX, this.posY, this.size, this.stepsToFood);
-                    if (detectedPheromone[0] /*&& !this.hasVisitedPheromone(detectedPheromone[1], detectedPheromone[2])*/) { // Im on a food pheromone
-                        //this.addVisitedPheromone(detectedPheromone[1], detectedPheromone[2]);
-                        this.stepsToFood = detectedPheromone[3];
+                    let detectedPheromone = map.containsFoodPheromone(this.posX, this.posY, this.size);
+                    if (detectedPheromone[0]) { // Im on a food pheromone
                         this.move(canvas, map);
                         this.draw(ctx);
                     } else {
-                        detectedPheromone = map.containsFoodPheromone(this.posX, this.posY, this.perceptionRadius, this.stepsToFood);
-                        if (detectedPheromone[0] /*&& !this.hasVisitedPheromone(detectedPheromone[1], detectedPheromone[2])*/) { // Food pheromone detected
+                        detectedPheromone = map.containsFoodPheromone(this.posX, this.posY, this.perceptionRadius);
+                        if (detectedPheromone[0]) { // Food pheromone detected
                             //console.log("I see a food pheromone")
-                            this.stepsToFood = detectedPheromone[3];
                             this.moveTowardsPoint(map, detectedPheromone[1], detectedPheromone[2])
                             this.draw(ctx);
                         } else { // Food pheromone not detected
