@@ -29,8 +29,6 @@ export class AntWorker {
         this.perceptionRadius = DEFAULT_PERCEPTION_RADIUS;
         this.status = SCOUTING;
         //this.visitedPheromones = new Set();
-        this.stepsToHome = 0;
-        this.stepsToFood = Infinity;
     }
     
     // addVisitedPheromone(x, y) {
@@ -90,10 +88,8 @@ export class AntWorker {
 
         if (this.carryingFood) {
             this.leavePheromone(map, TO_FOOD);
-            this.stepsToFood++;
         } else {
             this.leavePheromone(map, TO_HOME);
-            this.stepsToHome++;
         }
         
     }
@@ -113,10 +109,8 @@ export class AntWorker {
 
         this.rotationAngle = Math.atan2(dy, dx);
 
-        this.stepsToHome++;
         if (this.carryingFood) {
             this.leavePheromone(map, TO_FOOD);
-            this.stepsToFood++;
         } else {
             this.leavePheromone(map, TO_HOME);
         }
@@ -125,9 +119,9 @@ export class AntWorker {
     leavePheromone(map, pheromoneType) {
         if (AntWorker.pheromoneTimer === 0) {
             if (pheromoneType === TO_HOME) {
-                map.addPheromone(this.posX, this.posY, pheromoneType, this.stepsToHome);
+                map.addPheromone(this.posX, this.posY, pheromoneType);
             } else {
-                map.addPheromone(this.posX, this.posY, pheromoneType, this.stepsToFood);
+                map.addPheromone(this.posX, this.posY, pheromoneType);
             } 
         }
     }
@@ -137,16 +131,12 @@ export class AntWorker {
         map.foodInTransit++;
         map.foodAvaliable--;
         this.carryingFood = true;
-        this.stepsToFood = 0;
-        this.stepsToHome = Infinity;
     }
 
     deliverFood(map) {
         this.carryingFood = false;
         map.foodAtColony++;
         map.foodInTransit--;
-        this.stepsToHome = 0;
-        this.stepsToFood = Infinity;
     }
 
     draw(ctx) {
@@ -171,14 +161,8 @@ export class AntWorker {
     update(canvas, map) {
         let ctx = canvas.getContext('2d');
 
-        let detectedColony = map.containsItem(this.posX, this.posY, this.perceptionRadius, 2);
-        if (detectedColony[0]) {
-            this.stepsToHome = 1;
-        }
-
         //console.log("My distance to colony", map.calculateDistanceToColony(this.posX, this.posY));
 
-        //console.log("MY STEPS TO HOME:", this.stepsToHome, "MY STEPS TO FOOD:", this.stepsToFood)
         if (!this.carryingFood) { // Ant has no food
             let detectedFood = map.containsItem(this.posX, this.posY, this.size, 3); // 3 = FOOD
             if (detectedFood[0]) { // Ant colliding with food

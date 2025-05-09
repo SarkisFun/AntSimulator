@@ -136,9 +136,8 @@ export class MapGrid {
         return preferedPheromone;
     }
 
-    containsFoodPheromone(x, y, radius/*, antSteps*/) {
+    containsFoodPheromone(x, y, radius) {
         let coordinates = this.getGridCoordinates(x, y);
-        //let minSteps = Infinity;
         let maxDistance = -Infinity;
         let preferedPheromone = [false, null, null];
         let myDistanceToColony = this.calculateDistanceToColony(x, y);
@@ -155,7 +154,6 @@ export class MapGrid {
 
                     if (this.grid[newX][newY].content === PHEROMONED &&
                         this.grid[newX][newY].pheromoneType === TO_FOOD) {
-                            //let pheromoneSteps = this.grid[newX][newY].pheromoneSteps;
                         let pheromoneCoords = this.getRealCoordinates([newX, newY]);
                         let pheromoneDistance = this.calculateDistanceToColony(pheromoneCoords[0], pheromoneCoords[1]);
                         if (pheromoneDistance > myDistanceToColony) {
@@ -185,10 +183,10 @@ export class MapGrid {
             Tile.height * coordinates[1], Tile.width, Tile.height);
     }
 
-    addPheromone(x, y, type, steps) {
+    addPheromone(x, y, type) {
         let coordinates = this.getGridCoordinates(x, y);
         if(this.grid[coordinates[0]][coordinates[1]].content === EMPTY) {
-            this.grid[coordinates[0]][coordinates[1]].addPheromone(this.offScreenCtx, x, y, type, steps, this.showPheromones);
+            this.grid[coordinates[0]][coordinates[1]].addPheromone(this.offScreenCtx, x, y, type, this.showPheromones);
             if (this.showPheromones) {
                 this.draw(canvas);
             }
