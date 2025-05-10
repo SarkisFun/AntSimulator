@@ -29,6 +29,10 @@ export class MapGrid {
         this.foodInTransit = 0;
         this.foodAtColony = 0;
         this.showPheromones = true;
+        this.maxPossibleDistance = Math.sqrt(
+            Math.pow(this.mapWidth * Tile.width, 2) +
+            Math.pow(this.mapHeight * Tile.height, 2)
+        );
 
         for (let i = 0; i < this.mapWidth; i++) {
             this.grid[i] = new Array(this.mapHeight);  
@@ -97,9 +101,23 @@ export class MapGrid {
         return nearestFood;
     }
 
+    getPheromoneScore(distanceToColony, pheromoneIntensity, preferCloser = true) {
+        const distanceWeight = 2;
+        const intensityWeight = 1;
+        // Normalize distance (closer is better, so invert)
+        let normalizedDistance = 1 - (distanceToColony / this.maxPossibleDistance);
+        if (!preferCloser) {
+            normalizedDistance = 1 - normalizedDistance;
+        }
+        // Normalize intensity (0 to 1)
+        const normalizedIntensity = (pheromoneIntensity) / 100;
+        return (distanceWeight * normalizedDistance) + (intensityWeight * normalizedIntensity);
+    }
+
     containsHomePheromone(x, y, radius) {
         let coordinates = this.getGridCoordinates(x, y);
-        let bestDistance = Infinity;
+        //let bestDistance = Infinity;
+        let bestScore = -Infinity;
         let preferedPheromone = [false, null, null];
         let myDistanceToColony = this.calculateDistanceToColony(x, y);
 
@@ -119,8 +137,9 @@ export class MapGrid {
                         let pheromoneDistance = this.calculateDistanceToColony(pheromoneCoords[0], pheromoneCoords[1]);
                         if (pheromoneDistance < myDistanceToColony) {
                             // Prioritize pheromones leading closer to the goal
-                            if (pheromoneDistance < bestDistance) {
-                                bestDistance = pheromoneDistance;
+                            let score = this.getPheromoneScore(pheromoneDistance, this.grid[newX][newY].pheromoneIntensity);
+                            if (score > bestScore) {
+                                bestScore = score;
                                 preferedPheromone = [true, newX, newY];
                             }
                         }
@@ -138,7 +157,8 @@ export class MapGrid {
 
     containsFoodPheromone(x, y, radius) {
         let coordinates = this.getGridCoordinates(x, y);
-        let maxDistance = -Infinity;
+        //let maxDistance = -Infinity;
+        let bestScore = -Infinity;
         let preferedPheromone = [false, null, null];
         let myDistanceToColony = this.calculateDistanceToColony(x, y);
 
@@ -158,8 +178,9 @@ export class MapGrid {
                         let pheromoneDistance = this.calculateDistanceToColony(pheromoneCoords[0], pheromoneCoords[1]);
                         if (pheromoneDistance > myDistanceToColony) {
                             // Prioritize pheromones leading closer to the goal
-                            if (pheromoneDistance > maxDistance) {
-                                maxDistance = pheromoneDistance;
+                            let score = this.getPheromoneScore(pheromoneDistance, this.grid[newX][newY].pheromoneIntensity, false);
+                            if (score > bestScore) {
+                                bestScore = score;
                                 preferedPheromone = [true, newX, newY];
                             }
                         }
